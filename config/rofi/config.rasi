@@ -1,0 +1,64 @@
+configuration {
+modi: "drun,calc,run";
+show-icons: true;
+icn-theme: "yet-another-monochrome-icon-set";
+lines: 12;
+sidebar-mode: true;
+terminal: "ghostty";
+kb-mode-next: "L";
+kb-mode-previous: "H";
+timeout {
+    action: "kb-cancel";
+    delay:  0;
+}
+
+filebrowser {
+    directories-first: true;
+    sorting-method:    "name";
+}
+
+}
+
+@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
+
+#entry {
+    placeholder: "";
+}
+
+#inputbar {
+    children:   [ textbox-prompt-colon,entry,case-indicator ];
+}
+
+#textbox-prompt-colon {
+expand:     false;
+str:        ">";
+margin:     0px 0.3em 0em 0em ;
+text-color: white;
+}
+element-text, element-icon {
+background-color: inherit;
+text-color: inherit;
+}
+
+* {
+font: "IoskeveleyMono 14";
+scrollbar: false;
+background-color: transparent;
+}
+
+#window {
+border:           0;
+border-radius:    4;
+padding:          8;
+width: 540px;
+height: 620px;
+transparency: "real";
+}
+
+#element.alternate.normal {
+    background-color: @background-color;
+    text-color:       @foreground;
+}
+#inputbar {
+    padding: 8;
+}

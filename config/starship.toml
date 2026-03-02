@@ -1,0 +1,195 @@
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$cpp\
+$c\
+$lua\
+$nodejs\
+$python\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+style = "blue"
+
+[character]
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
+
+[git_branch]
+format = "[$branch]($style)"
+style = "bright-black"
+
+[git_status]
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+style = "cyan"
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+
+[cpp]
+disabled = false
+format = '[$symbol]($style)'
+style = "bold 138"
+detect_extensions = ['cpp', 'cc', 'cxx', 'c++', 'hpp', 'hh', 'hxx', 'h++', 'tcc']
+detect_files = ['CMakeLists.txt']
+
+[c]
+disabled = false
+format = '[$symbol]($style)'
+style = "blue"
+
+
+[bun]
+format = "[$symbol]($style)"
+
+[buf]
+format = "[$symbol]($style)"
+
+[cmake]
+format = "[$symbol]($style)"
+
+[cobol]
+format = "[$symbol]($style)"
+
+[crystal]
+format = "[$symbol]($style)"
+
+[daml]
+format = "[$symbol]($style)"
+
+[dart]
+format = "[$symbol]($style)"
+
+[deno]
+format = "[$symbol]($style)"
+
+[dotnet]
+format = "[$symbol(🎯 $tfm )]($style)"
+
+[elixir]
+format = '[$symbol]($style)'
+
+[elm]
+format = '[$symbol]($style)'
+
+[erlang]
+format = '[$symbol]($style)'
+
+[fennel]
+format = '[$symbol]($style)'
+
+[gleam]
+format = '[$symbol]($style)'
+
+[golang]
+format = '[$symbol]($style)'
+
+[gradle]
+format = '[$symbol]($style)'
+
+[haxe]
+format = '[$symbol]($style)'
+
+[helm]
+format = '[$symbol]($style)'
+
+[java]
+format = '[$symbol]($style)'
+
+[julia]
+format = '[$symbol]($style)'
+
+[kotlin]
+format = '[$symbol]($style)'
+
+[lua]
+format = '[$symbol]($style)'
+
+[meson]
+format = '[$symbol]($style)'
+
+[nim]
+format = '[$symbol]($style)'
+
+[nodejs]
+format = '[$symbol]($style)'
+
+[ocaml]
+format = '[$symbol(\($switch_indicator$switch_name\) )]($style)'
+
+[opa]
+format = '[$symbol]($style)'
+
+[perl]
+format = '[$symbol]($style)'
+
+[pixi]
+format = '[$symbol($environment )]($style)'
+
+[php]
+format = '[$symbol]($style)'
+
+[pulumi]
+format = '[$symbol$stack]($style)'
+
+[purescript]
+format = '[$symbol]($style)'
+
+[python]
+format = '[$symbol]($style)'
+
+[quarto]
+format = '[$symbol]($style)'
+
+[raku]
+format = '[$symbol]($style)'
+
+[red]
+format = '[$symbol]($style)'
+
+[rlang]
+format = '[$symbol]($style)'
+
+[ruby]
+format = '[$symbol]($style)'
+
+[rust]
+format = '[$symbol]($style)'
+
+[solidity]
+format = '[$symbol]($style)'
+
+[typst]
+format = '[$symbol]($style)'
+
+[swift]
+format = '[$symbol]($style)'
+
+[vagrant]
+format = '[$symbol]($style)'
+
+[vlang]
+format = '[$symbol]($style)'
+
+[zig]
+format = '[$symbol]($style)'

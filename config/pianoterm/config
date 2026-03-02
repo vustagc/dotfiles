@@ -1,0 +1,8 @@
+on_press
+
+21 = playerctl previous
+22 = playerctl play-pause
+23 = playerctl next
+
+107 = yd_scroll_down.sh
+108 = yd_scroll_up.sh

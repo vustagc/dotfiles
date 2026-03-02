@@ -1,0 +1,127 @@
+{
+    "output": "DP-1",
+    "layer": "top",
+    "modules-left": ["hyprland/workspaces", "hyprland/workspaces#special", "hyprland/submap"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": ["group/group-tray", "network", "pulseaudio", "clock"],
+
+    "hyprland/window": {
+        "icon": true,
+        "icon-size": 15,
+        "icon-color": "white",
+        "rewrite": {
+            "(.*) - ghostty": "$1",
+            "(.*) - FreeTube": "$1",
+            "(.*) — LibreWolf": "$1",
+            "• Discord | (.*)": "$1",
+            "(.*) - YouTube — LibreWolf": "   $1"
+        },
+        "max-length": 100
+    },
+
+    "hyprland/workspaces#special": {
+        "ignore-workspaces": ["[0-9]", "10"],
+        "show-special": true,
+        "special-visible-only": true
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰟎",
+        "format-icons": { "default": "󰋋" },
+        "tooltip-format": "{volume}%",
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "scroll-step": 5
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "rotate": 0,
+        "format-alt": "{:%d/%m/%y}",
+        "tooltip-format": "<span>{calendar}</span>",
+        "calendar": {
+            "mode": "month",
+            "format": {
+                "months": "<span color='#d79921'><b>{}</b></span>",
+                "weekdays": "<span color='#fe8019'><b>{}</b></span>",
+                "days": "<span color='#ebdbb2'><b>{}</b></span>",
+                "today": "<span color='#d3869b'><b>{}</b></span>"
+            }
+        }
+    },
+
+    "network": {
+        "interface": "enp8s0",
+        "format": "☠️",
+        "format-wifi": "",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+        "tooltip-format-ethernet": "{ifname} ({bandwidthDownBits}) 󰈀",
+        "max-length": 2
+    },
+
+    "group/group-tray": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/trayindicator",
+            "tray"
+        ]
+    },
+
+    "custom/trayindicator": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "hyprland/submap": {
+        "format": "{}",
+        "tooltip": false
+    },
+
+    "group/group-power": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/quit1",
+            "custom/lock",
+            "custom/reboot",
+            "custom/quit"
+        ]
+    },
+
+    "custom/lock": {
+        "format": "󰍁",
+        "tooltip-format": "lock",
+        "on-click": "hyprlock"
+    },
+    "custom/reboot": {
+        "format": "󰜉",
+        "tooltip-format": "reboot",
+        "on-click": "reboot"
+    },
+    "custom/quit": {
+        "format": "",
+        "tooltip-format": "shutdown",
+        "on-click": "shutdown now"
+    },
+    "custom/quit1": {
+        "format": "⏽",
+        "tooltip": false
+    }
+
+}

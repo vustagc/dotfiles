@@ -1,0 +1,113 @@
+* {
+    font-family: IoskeleyMono, sans-serif;
+    font-size: 12px;
+}
+
+window#waybar {
+    background-color: black;
+    color: white;
+}
+
+#workspaces button {
+    padding: 0 5px;
+     color: gray;
+}
+
+#workspaces button.focused, #workspaces button.active {
+    color: white;
+}
+
+#window {
+    color: white;
+}
+
+#window image {
+    /* -gtk-icon-style: symbolic; */
+    color: white;
+    opacity: 0.9;
+}
+
+#workspaces button.urgent {
+    color: red;
+}
+
+/* #group-tray, */
+/* #group-power, */
+#custom-quit,
+/* #custom-quit1, */
+#custom-reboot,
+#custom-lock,
+#custom-trayindicator,
+#submap,
+/* #clock, */
+#network,
+#pulseaudio,
+#mode
+{
+    padding: 0 8px;
+    color: white;
+}
+
+#custom-quit1 {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+#clock
+{
+    padding-left: 4px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+#custom-lock,
+#workspaces {
+    margin-left: 0;
+}
+
+#clock {
+    color: white;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+label:focus {
+    background-color: #000000;
+}
+
+#network {
+    color: white;
+}
+
+#network.disconnected {
+    color: gray;
+}
+
+#wireplumber {
+    color: white;
+}
+
+#wireplumber.muted {
+    color: gray;
+}
+
+#tray {
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: #eb4d4b;
+}
+
