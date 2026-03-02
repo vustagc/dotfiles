@@ -1,8 +1,15 @@
 # dots
 
-Packages
-- fish shell 
-- flameshot
+## Cloning
+
+```bash
+git clone https://github.com/vustagc/dotfiles ~/.dotfiles
+rcup
+```
+
+## Packages
+- rcm
+- fish
 - vim
 - neovim
 - tmux
@@ -20,11 +27,10 @@ Packages
 - ghostty
 - dunst
 - starship
-- nautilus
 - obsidian
 - cliphist
 - kdeconnect
 
-To add
+To do
 - folder with gtk/qt theme, cursor and fonts
-- script that moves everything to the right place
+- packages install script
