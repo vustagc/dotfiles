@@ -41,20 +41,22 @@ opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.foldenable = true
+vim.cmd("cabbrev help vert help")
 
+-- variables
 vim.diagnostic.config({
-	virtual_text = false,
-	signs = false,
-	underline = false,
-	update_in_insert = false,
+    virtual_text = false,
+    signs = false,
+    underline = false,
+    update_in_insert = false,
 })
 
 -- keybinds
 vim.cmd("tnoremap <C-q> <C-\\><C-n>")
-map("n", "<C-s>", ":noa w<CR>", { silent = true })
+map("n", "<C-f>", function() vim.lsp.buf.format({ async = false }) end, { silent = true })
+map("n", "<C-s>", ":noa wa<CR>", { silent = true })
 map("n", "<C-b>", ":make <CR>", { silent = true })
 map("n", "<C-s-b>", ":make run<CR>", { silent = true })
-
 map("v", "<C-y>", '"+y', { silent = true })
 map("n", "<C-p>", '"+p', { silent = true })
 map("n", "<C-h>", "<C-w>h", { desc = "Window Left" })
@@ -70,52 +72,121 @@ map("n", "<A-n>", ":cnext<CR>", { desc = "Quickfix Next" })
 map("n", "<A-p>", ":cprev<CR>", { desc = "Quickfix Previous" })
 map("n", "<leader>open", ":AutoSession search<CR>")
 
+-- Commands
+-- Norm: M<command>
+
+vim.api.nvim_create_user_command("Mdone", function()
+    require("user.commands").toggleStrikeThrough()
+end, {})
+
+vim.api.nvim_create_user_command("Mtmp", function()
+    require("user.commands").mktemp()
+end, {})
+vim.api.nvim_create_user_command("Mput", function(opts)
+    require("user.commands").echoOutput(opts)
+end, { nargs = "+" })
+vim.api.nvim_create_user_command("Mview", function(opts)
+    require("user.commands").viewOutput(opts)
+end, { nargs = "+" })
+
+vim.api.nvim_create_user_command("Mviews", function(opts)
+    vim.fn.execute("vsplit")
+    require("user.commands").viewOutput(opts)
+end, { nargs = "+" })
+
 -- autocmds
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-	callback = function(ev)
-		local opts = { buffer = ev.buf }
-		map("n", "gd", vim.lsp.buf.definition, opts)
-		map("n", "gy", vim.lsp.buf.type_definition, opts)
-		map("n", "gi", vim.lsp.buf.implementation, opts)
-		map("n", "gr", vim.lsp.buf.references, opts)
-		map("n", "<leader>g", vim.diagnostic.goto_next, opts)
-		map("n", "<leader>G", vim.diagnostic.goto_prev, opts)
-		map("n", "gh", vim.lsp.buf.hover, opts)
-		map("n", "<leader>ih", function()
-			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-		end, opts)
-		map("n", "<F9>", vim.lsp.buf.code_action, opts)
-	end,
+    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+    callback = function(ev)
+        local opts = { buffer = ev.buf }
+        map("n", "gd", vim.lsp.buf.definition, opts)
+        map("n", "gy", vim.lsp.buf.type_definition, opts)
+        map("n", "gi", vim.lsp.buf.implementation, opts)
+        map("n", "gr", vim.lsp.buf.references, opts)
+        map("n", "<leader>g", vim.diagnostic.goto_next, opts)
+        map("n", "<leader>G", vim.diagnostic.goto_prev, opts)
+        map("n", "gh", vim.lsp.buf.hover, opts)
+        map("n", "<leader>ih", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end, opts)
+        map("n", "<F9>", vim.lsp.buf.code_action, opts)
+    end,
 })
 
 vim.api.nvim_create_autocmd("CursorMoved", {
-	group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
-	callback = function()
-		if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
-			vim.schedule(function()
-				vim.cmd.nohlsearch()
-			end)
-		end
-	end,
+    group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
+    callback = function()
+        if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+            vim.schedule(function()
+                vim.cmd.nohlsearch()
+            end)
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-	group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
-	callback = function()
-		vim.opt_local.number = false
-		vim.opt_local.relativenumber = false
-		vim.opt_local.signcolumn = "no"
-	end,
+    group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.signcolumn = "no"
+    end,
 })
-
--- startup
-require("config.lazy")
-require("lazy").setup("plugins")
--- vim.lsp.enable({ "zls", "clangd", "lua_ls" })
-
-vim.cmd("colorscheme gruvbox")
 
 set_hl(0, "BlinkCmpSignatureHelp", { link = "BlinkCmpMenu" })
 set_hl(0, "BlinkCmpSignatureHelpBorder", { link = "BlinkCmpMenuBorder" })
 set_hl(0, "BlinkCmpSignatureHelpActiveParameter", { link = "LspSignatureActiveParameter" })
+
+
+-- lsp
+require("config.lazy")
+require("lazy").setup("plugins")
+
+vim.lsp.config('lua_ls', {
+    on_init = function(client)
+        if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if
+                path ~= vim.fn.stdpath('config')
+                and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+            then
+                return
+            end
+        end
+
+        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            runtime = {
+                version = 'LuaJIT',
+                -- Tell the language server how to find Lua modules same way as Neovim
+                -- (see `:h lua-module-load`)
+                path = {
+                    'lua/?.lua',
+                    'lua/?/init.lua',
+                },
+            },
+            -- Make the server aware of Neovim runtime files
+            workspace = {
+                checkThirdParty = false,
+                library = {
+                    vim.env.VIMRUNTIME,
+                },
+            },
+        })
+    end,
+    settings = {
+        Lua = {},
+    },
+})
+
+vim.lsp.enable({
+    "zls",
+    "clangd",
+    "lua_ls",
+    "cmake",
+    "markdown_oxide",
+    "jdtls"
+})
+
+
+vim.cmd("colorscheme gruvbox")
+--vim.cmd("colorscheme retrobox")
