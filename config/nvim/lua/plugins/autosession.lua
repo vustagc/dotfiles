@@ -3,7 +3,7 @@ return {
 	opts = {
 		auto_save_enabled = true,
 		auto_restore_enabled = true,
-		auto_session_suppress_dirs = { "~/", "~/.config/*", "~/Downloads", "/" },
+		auto_session_suppress_dirs = { "~/", "~/Downloads", "/" },
 	},
 	lazy = false,
 }

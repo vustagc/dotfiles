@@ -3,8 +3,6 @@ return {
 	lazy = false,
 	build = ":TSUpdate",
 	config = function()
-		-- require("nvim-treesitter").setup({})
-		-- require("nvim-treesitter").install({ "zig", "c", "python", "javascript", "json" })
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"zig",
@@ -14,6 +12,8 @@ return {
 				"python",
 				"javascript",
 				"json",
+                                "markdown",
+                                "markdown_inline",
 			},
 			highlight = { enable = true },
 		})

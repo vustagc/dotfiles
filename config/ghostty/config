@@ -10,6 +10,7 @@ font-size = 14
 theme = Gruvbox Dark Hard
 title = "ghostty"
 window-decoration = server
+cursor-style = bar
 window-theme = dark
 maximize = false
 

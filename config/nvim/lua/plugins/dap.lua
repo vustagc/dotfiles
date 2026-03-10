@@ -1,17 +1,17 @@
 return {
 	"mfussenegger/nvim-dap",
 	dependencies = {
-		"rcarriga/nvim-dap-ui",
+		-- "rcarriga/nvim-dap-ui",
 		"theHamsta/nvim-dap-virtual-text",
 		"jay-babu/mason-nvim-dap.nvim",
 		"nvim-neotest/nvim-nio",
 	},
 	config = function()
-		local ui = require("dapui")
+		-- local ui = require("dapui")
 		local dap = require("dap")
 		local map = vim.keymap.set
 
-		require("dapui").setup()
+		-- require("dapui").setup()
 		require("nvim-dap-virtual-text").setup()
 
 		dap.adapters.gdb = {
@@ -43,17 +43,17 @@ return {
 		map("n", "<F5>", dap.toggle_breakpoint)
 
 		-- Listeners for UI interaction
-		dap.listeners.before.attach.dapui_config = function()
-			ui.open()
-		end
-		dap.listeners.before.launch.dapui_config = function()
-			ui.open()
-		end
-		dap.listeners.before.event_terminated.dapui_config = function()
-			ui.close()
-		end
-		dap.listeners.before.event_exited.dapui_config = function()
-			ui.close()
-		end
+		-- dap.listeners.before.attach.dapui_config = function()
+		-- 	ui.open()
+		-- end
+		-- dap.listeners.before.launch.dapui_config = function()
+		-- 	ui.open()
+		-- end
+		-- dap.listeners.before.event_terminated.dapui_config = function()
+		-- 	ui.close()
+		-- end
+		-- dap.listeners.before.event_exited.dapui_config = function()
+		-- 	ui.close()
+		-- end
 	end,
 }

@@ -59,18 +59,37 @@ map("n", "<C-b>", ":make <CR>", { silent = true })
 map("n", "<C-s-b>", ":make run<CR>", { silent = true })
 map("v", "<C-y>", '"+y', { silent = true })
 map("n", "<C-p>", '"+p', { silent = true })
-map("n", "<C-h>", "<C-w>h", { desc = "Window Left" })
-map("n", "<C-j>", "<C-w>j", { desc = "Window Down" })
-map("n", "<C-k>", "<C-w>k", { desc = "Window Up" })
-map("n", "<C-l>", "<C-w>l", { desc = "Window Right" })
-map("n", "J", ":bprevious<CR>", { desc = "Prev Buffer" })
-map("n", "K", ":bnext<CR>", { desc = "Next Buffer" })
-map("n", "H", ":tabprev<CR>", { desc = "Prev Tab" })
-map("n", "L", ":tabnext<CR>", { desc = "Next Tab" })
-map("n", "<C-t>", ":tabe<CR>", { desc = "New Tab" })
-map("n", "<A-n>", ":cnext<CR>", { desc = "Quickfix Next" })
-map("n", "<A-p>", ":cprev<CR>", { desc = "Quickfix Previous" })
+map("v", "<C-p>", '"_dP', { silent = true })
+map("n", "<C-h>", "<C-w>h")
+map("n", "<C-j>", "<C-w>j")
+map("n", "<C-k>", "<C-w>k")
+map("n", "<C-l>", "<C-w>l")
+map("n", "<C-x>", ":vsplit<CR>")
+map("n", "<leader>swap", "<C-w><C-x>")
+map("n", "J", ":bprevious<CR>")
+map("n", "K", ":bnext<CR>")
+map("n", "H", ":tabprev<CR>")
+map("n", "L", ":tabnext<CR>")
+map("n", "<C-t>", ":term<CR>")
+map("n", "<A-n>", ":cnext<CR>")
+map("n", "<A-p>", ":cprev<CR>")
 map("n", "<leader>open", ":AutoSession search<CR>")
+
+-- plugin keybinds
+
+-- search x
+map("n", "<leader>sr", ":FzfLua resume<cr>")
+map("n", "<leader>sf", ":FzfLua files<cr>")
+map("n", "<leader>sb", ":FzfLua buffers<cr>")
+map("n", "<leader>sp", ":FzfLua live_grep<cr>") -- search pattern
+map("n", "<leader>sd", ":FzfLua diagnostics_document<cr>")
+map("n", "<leader>sD", ":FzfLua diagnostics_workspace<cr>")
+
+-- map("n", "<leader>fs", builtin.find_files, { desc = "File Search" })
+-- map("n", "<leader>es", builtin.diagnostics, { desc = "Error Search" })
+-- map("n", "<leader>ps", builtin.live_grep, { desc = "Pattern Search (Ag)" })
+-- map("n", "<leader>bs", buffer_searcher, { desc = "Buffer search" })
+
 
 -- Commands
 -- Norm: M<command>
@@ -103,8 +122,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "gy", vim.lsp.buf.type_definition, opts)
         map("n", "gi", vim.lsp.buf.implementation, opts)
         map("n", "gr", vim.lsp.buf.references, opts)
-        map("n", "<leader>g", vim.diagnostic.goto_next, opts)
-        map("n", "<leader>G", vim.diagnostic.goto_prev, opts)
+        -- map("n", "<leader>g", vim.diagnostic.goto_next, opts)
+        -- map("n", "<leader>G", vim.diagnostic.goto_prev, opts)
         map("n", "gh", vim.lsp.buf.hover, opts)
         map("n", "<leader>ih", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
@@ -178,13 +197,24 @@ vim.lsp.config('lua_ls', {
     },
 })
 
+
 vim.lsp.enable({
     "zls",
     "clangd",
     "lua_ls",
     "cmake",
-    "markdown_oxide",
-    "jdtls"
+    "jdtls",
+})
+
+vim.lsp.config('*', {
+    root_markers = { '.git' },
+    capabilities = {
+        textDocument = {
+            semanticTokens = {
+                multilineTokenSupport = true,
+            }
+        }
+    }
 })
 
 

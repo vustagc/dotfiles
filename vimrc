@@ -1,13 +1,7 @@
 colorscheme retrobox
 
-"vim.g.mapleader = " "
-"vim.g.
-"vim.g.zig_fmt_parse_errors = 0
-"vim.g.zig_fmt_autosave = 0
-
 let mapleader=" "
 
-"set background="dark"
 set termguicolors
 set noshowmode
 set tabstop=4
@@ -37,7 +31,6 @@ set smartcase
 set laststatus=3
 set encoding=UTF_8
 set hidden
-"set updatetime=300
 
 filetype plugin on
 syntax on
