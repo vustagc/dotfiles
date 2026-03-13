@@ -3,7 +3,10 @@ ZSH_THEME=""
 #autoload -U colors && colors
 PROMPT='%F{yellow}%~%f %F{gray}>%f '
 #PROMPT='%3~ > '
-echo -ne '\e[5 q'
+ echo -ne '\e[5 q'
+
+PROMPT_COMMAND='echo -e -n "\\x1b[0 q"'
+precmd() { eval "$PROMPT_COMMAND" }
 
 zstyle ':omz:update' mode disabled  # disable automatic updates
 DISABLE_AUTO_TITLE="true"
