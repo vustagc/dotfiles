@@ -1,11 +1,8 @@
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
-#autoload -U colors && colors
 PROMPT='%F{yellow}%~%f %F{gray}>%f '
-#PROMPT='%3~ > '
- echo -ne '\e[5 q'
 
-PROMPT_COMMAND='echo -e -n "\\x1b[0 q"'
+PROMPT_COMMAND='echo -e -n "\\x1b[5 q"'
 precmd() { eval "$PROMPT_COMMAND" }
 
 zstyle ':omz:update' mode disabled  # disable automatic updates
@@ -43,12 +40,13 @@ alias v="nvim"
 
 alias dot="git -C $DOTS"
 alias vimrc="nvim $DOTS/config/nvim/init.lua"
-alias shrc="nvim $DOTS/zshrc"
+alias zshrc="nvim $DOTS/zshrc"
 alias fishrc="nvim $DOTS/config/fish/config.fish"
 alias hyprrc="nvim $DOTS/config/hypr/"
 alias waybarrc="nvim $DOTS/config/waybar/"
 alias rofirc="nvim $DOTS/config/rofi/config.rasi"
 alias ghosttyrc="nvim $DOTS/config/ghostty/config"
+alias footrc="nvim $DOTS/config/foot/foot.ini"
 alias pianotermrc="nvim $DOTS/config/pianoterm/config"
 alias sshrc="nvim $HOME/.ssh/config"
 alias sourcerc="source $HOME/.zshrc"

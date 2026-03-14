@@ -41,6 +41,9 @@ opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.foldenable = true
+opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
+--opt.guicursor = "n-v-c:ver25,i-ci:ver25,r-cr:hor20,o:hor50"
+
 vim.cmd("cabbrev help vert help")
 
 -- variables
@@ -143,14 +146,31 @@ vim.api.nvim_create_autocmd("CursorMoved", {
     end,
 })
 
-vim.api.nvim_create_autocmd("TermOpen", {
-    group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
-    callback = function()
-        vim.opt_local.number = false
-        vim.opt_local.relativenumber = false
-        vim.opt_local.signcolumn = "no"
-    end,
+vim.api.nvim_create_autocmd('TermOpen', {
+    command = 'setlocal signcolumn=auto',
 })
+
+-- local ns = vim.api.nvim_create_namespace('my.terminal.prompt')
+-- vim.api.nvim_create_autocmd('TermRequest', {
+--     callback = function(args)
+--         if string.match(args.data.sequence, '^\027]133;A') then
+--             local lnum = args.data.cursor[1]
+--             vim.api.nvim_buf_set_extmark(args.buf, ns, lnum - 1, 0, {
+--                 sign_text = '▶',
+--                 sign_hl_group = 'SpecialChar',
+--             })
+--         end
+--     end,
+-- })
+
+-- vim.api.nvim_create_autocmd("TermOpen", {
+--     group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
+--     callback = function()
+--         vim.opt_local.number = false
+--         vim.opt_local.relativenumber = false
+--         vim.opt_local.signcolumn = "no"
+--     end,
+-- })
 
 set_hl(0, "BlinkCmpSignatureHelp", { link = "BlinkCmpMenu" })
 set_hl(0, "BlinkCmpSignatureHelpBorder", { link = "BlinkCmpMenuBorder" })

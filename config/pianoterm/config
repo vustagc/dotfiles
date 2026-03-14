@@ -1,33 +1,14 @@
-# Notes
-## Syntax
-
 on_press
 21 = playerctl previous
 22 = playerctl play-pause
 23 = playerctl next
 
 on_press
-61 = ydotool key 105:1 # left
-63 = ydotool key 106:1 # right
-66 = ydotool key 57:1  # space
-70 = ydotool key 18:1  # alt
-
-on_release
-61 = ydotool key 105:0 
-63 = ydotool key 106:0
-66 = ydotool key 57:0
-70 = ydotool key 18:0
-
-# Map directly to keyboard keys (wayland)
-on_press
 107 = ydotool key 108:1
 108 = ydotool key 103:1
 on_release
 107 = ydotool key 108:0
 108 = ydotool key 103:0
-
-# Controllers (pedals, knobs, ...)
-## syntax: controller (value) = command
 
 # 64 (127) = notify-send "Pressed pedal"
 # 64 (0)   = notify-send "Released pedal"
