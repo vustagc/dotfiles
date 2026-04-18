@@ -37,7 +37,6 @@ opt.scrolloff = 0
 opt.sidescrolloff = 0
 opt.laststatus = 3
 opt.foldmethod = "expr"
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.foldenable = true
@@ -216,7 +215,6 @@ vim.lsp.config('lua_ls', {
         Lua = {},
     },
 })
-
 
 vim.lsp.enable({
     "zls",

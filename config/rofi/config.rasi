@@ -4,7 +4,7 @@ show-icons: true;
 icn-theme: "yet-another-monochrome-icon-set";
 lines: 12;
 sidebar-mode: true;
-terminal: "ghostty";
+terminal: "foot";
 kb-mode-next: "L";
 kb-mode-previous: "H";
 timeout {

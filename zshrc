@@ -37,6 +37,7 @@ else
 fi
 
 alias v="nvim"
+alias vi="nvim --noplugin"
 
 alias dot="git -C $DOTS"
 alias vimrc="nvim $DOTS/config/nvim/init.lua"
@@ -52,12 +53,12 @@ alias sshrc="nvim $HOME/.ssh/config"
 alias sourcerc="source $HOME/.zshrc"
 
 alias sysupdate="bash $DOTS/config/user/scripts/system_update.sh"
-alias obsidian="nvim $HOME/Documents/Obsidian"
-alias serve_wikipedia="sudo kiwix-serve $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim"
-alias serve_archwiki="sudo kiwix-serve $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim"
+alias obsidian="nvim $HOME/Vault"
 alias playswitch="gamemoderun $MEDIA/Games/ryujinx/publish/Ryujinx"
 alias clonesite="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent"
 alias scratch='nvim $(mktemp)'
+alias chat='$HOME/.config/user/scripts/local_chat.sh'
+alias serve="kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim"
 
 #bindkey '^F' forward-char
 

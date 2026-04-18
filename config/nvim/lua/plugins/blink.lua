@@ -13,7 +13,7 @@ return {
             },
         },
         sources = {
-            default = { "lsp", "path", "snippets", "buffer" },
+            default = { "lsp", "path", "buffer" },
         },
         fuzzy = { implementation = "prefer_rust_with_warning" },
         completion = {

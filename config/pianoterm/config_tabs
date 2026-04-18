@@ -1,0 +1,10 @@
+on_press
+21 = ydotool key 29:1 42:1 15:1 29:0 42:0 15:0 # ctrl+shift+tab
+23 = ydotool key 29:1 15:1 29:0 15:0 # ctrl+tab
+
+on_press
+107 = ydotool key 108:1
+108 = ydotool key 103:1
+on_release
+107 = ydotool key 108:0
+108 = ydotool key 103:0
