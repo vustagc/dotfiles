@@ -5,18 +5,18 @@ local set_hl = vim.api.nvim_set_hl
 -- variables
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.zig_fmt_parse_errors = 0
-vim.g.zig_fmt_autosave = 0
+vim.g.zig_fmt_parse_errors = 1
+vim.g.zig_fmt_autosave = 1
 
 -- options
 opt.encoding = "utf-8"
 opt.background = "dark"
 opt.termguicolors = true
 opt.number = true
-opt.relativenumber = true
-opt.signcolumn = "yes"
-opt.showtabline = 2
-opt.cursorline = true
+-- opt.relativenumber = true
+-- opt.signcolumn = "yes"
+-- opt.showtabline = 2
+-- opt.cursorline = true
 opt.showmode = false
 opt.splitright = true
 opt.splitbelow = true
@@ -35,15 +35,8 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.scrolloff = 0
 opt.sidescrolloff = 0
-opt.laststatus = 3
-opt.foldmethod = "expr"
-opt.foldlevel = 99
-opt.foldlevelstart = 99
-opt.foldenable = true
+opt.laststatus = 0
 opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
---opt.guicursor = "n-v-c:ver25,i-ci:ver25,r-cr:hor20,o:hor50"
-
-vim.cmd("cabbrev help vert help")
 
 -- variables
 vim.diagnostic.config({
@@ -55,7 +48,13 @@ vim.diagnostic.config({
 
 -- keybinds
 vim.cmd("tnoremap <C-q> <C-\\><C-n>")
-map("n", "<C-f>", function() vim.lsp.buf.format({ async = false }) end, { silent = true })
+map("n", "<C-f>", function()
+    vim.lsp.buf.format({ async = false })
+    vim.lsp.buf.code_action({
+        context = { only = { "source.fixAll" } },
+        apply = true,
+    })
+end, { silent = true })
 map("n", "<C-s>", ":noa wa<CR>", { silent = true })
 map("n", "<C-b>", ":make <CR>", { silent = true })
 map("n", "<C-s-b>", ":make run<CR>", { silent = true })
@@ -75,26 +74,34 @@ map("n", "L", ":tabnext<CR>")
 map("n", "<C-t>", ":term<CR>")
 map("n", "<A-n>", ":cnext<CR>")
 map("n", "<A-p>", ":cprev<CR>")
-map("n", "<leader>open", ":AutoSession search<CR>")
-
--- plugin keybinds
-
--- search x
-map("n", "<leader>sr", ":FzfLua resume<cr>")
-map("n", "<leader>sf", ":FzfLua files<cr>")
-map("n", "<leader>sb", ":FzfLua buffers<cr>")
-map("n", "<leader>sp", ":FzfLua live_grep<cr>") -- search pattern
-map("n", "<leader>sd", ":FzfLua diagnostics_document<cr>")
-map("n", "<leader>sD", ":FzfLua diagnostics_workspace<cr>")
-
--- map("n", "<leader>fs", builtin.find_files, { desc = "File Search" })
--- map("n", "<leader>es", builtin.diagnostics, { desc = "Error Search" })
--- map("n", "<leader>ps", builtin.live_grep, { desc = "Pattern Search (Ag)" })
--- map("n", "<leader>bs", buffer_searcher, { desc = "Buffer search" })
-
 
 -- Commands
--- Norm: M<command>
+
+-- Grep
+vim.cmd("cabbrev grep Grep")
+vim.o.grepprg = "rg --vimgrep --hidden -g '!.git/*'"
+vim.api.nvim_create_user_command('Grep', function(opts)
+    local pattern = vim.trim(opts.args)
+
+    if pattern == '' then
+        return
+    end
+
+    local grep_cmd = vim.o.grepprg .. ' ' .. vim.fn.shellescape(pattern)
+    local grep_output = vim.fn.systemlist(grep_cmd)
+
+    if #grep_output == 0 then
+        print('No matches found for: ' .. pattern)
+        return
+    end
+
+    -- Set and open quickfix list
+    vim.fn.setqflist({}, ' ', {
+        title = 'Grep results for: ' .. pattern,
+        lines = grep_output
+    })
+    vim.cmd('copen')
+end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("Mdone", function()
     require("user.commands").toggleStrikeThrough()
@@ -149,79 +156,34 @@ vim.api.nvim_create_autocmd('TermOpen', {
     command = 'setlocal signcolumn=auto',
 })
 
--- local ns = vim.api.nvim_create_namespace('my.terminal.prompt')
--- vim.api.nvim_create_autocmd('TermRequest', {
---     callback = function(args)
---         if string.match(args.data.sequence, '^\027]133;A') then
---             local lnum = args.data.cursor[1]
---             vim.api.nvim_buf_set_extmark(args.buf, ns, lnum - 1, 0, {
---                 sign_text = '▶',
---                 sign_hl_group = 'SpecialChar',
---             })
---         end
---     end,
--- })
+local ns = vim.api.nvim_create_namespace('my.terminal.prompt')
+vim.api.nvim_create_autocmd('TermRequest', {
+    callback = function(args)
+        if string.match(args.data.sequence, '^\027]133;A') then
+            local lnum = args.data.cursor[1]
+            vim.api.nvim_buf_set_extmark(args.buf, ns, lnum - 1, 0, {
+                sign_text = '▶',
+                sign_hl_group = 'SpecialChar',
+            })
+        end
+    end,
+})
 
--- vim.api.nvim_create_autocmd("TermOpen", {
---     group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
---     callback = function()
---         vim.opt_local.number = false
---         vim.opt_local.relativenumber = false
---         vim.opt_local.signcolumn = "no"
---     end,
--- })
-
-set_hl(0, "BlinkCmpSignatureHelp", { link = "BlinkCmpMenu" })
-set_hl(0, "BlinkCmpSignatureHelpBorder", { link = "BlinkCmpMenuBorder" })
-set_hl(0, "BlinkCmpSignatureHelpActiveParameter", { link = "LspSignatureActiveParameter" })
+vim.api.nvim_create_autocmd("TermOpen", {
+    group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.signcolumn = "no"
+    end,
+})
 
 
 -- lsp
-require("config.lazy")
-require("lazy").setup("plugins")
-
-vim.lsp.config('lua_ls', {
-    on_init = function(client)
-        if client.workspace_folders then
-            local path = client.workspace_folders[1].name
-            if
-                path ~= vim.fn.stdpath('config')
-                and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
-            then
-                return
-            end
-        end
-
-        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-            runtime = {
-                version = 'LuaJIT',
-                -- Tell the language server how to find Lua modules same way as Neovim
-                -- (see `:h lua-module-load`)
-                path = {
-                    'lua/?.lua',
-                    'lua/?/init.lua',
-                },
-            },
-            -- Make the server aware of Neovim runtime files
-            workspace = {
-                checkThirdParty = false,
-                library = {
-                    vim.env.VIMRUNTIME,
-                },
-            },
-        })
-    end,
-    settings = {
-        Lua = {},
-    },
-})
-
 vim.lsp.enable({
     "zls",
     "clangd",
     "lua_ls",
-    "cmake",
-    "jdtls",
 })
 
 vim.lsp.config('*', {
@@ -235,6 +197,96 @@ vim.lsp.config('*', {
     }
 })
 
+-- plugins
+vim.pack.add({
+    "https://github.com/stevearc/oil.nvim",
+    "https://github.com/3rd/image.nvim",
+    "https://github.com/kylechui/nvim-surround",
+    "https://github.com/rmagatti/auto-session",
+    "https://github.com/mfussenegger/nvim-dap",
+    "https://github.com/igorlfs/nvim-dap-view"
+})
 
-vim.cmd("colorscheme gruvbox")
+require("auto-session").setup({
+    auto_save_enabled = true,
+    auto_restore_enabled = true,
+    auto_session_suppress_dirs = { "/", "~/", "~/Downloads", "~/Archives" },
+})
+
+require("image").setup({
+    backend = "sixel",
+    processor = "magick_cli",
+})
+require("oil").setup({
+    default_file_explorer = true,
+    use_default_keymaps = false,
+    view_options = {
+        show_hidden = false,
+    },
+
+    keymaps = {
+        ["g?"] = { "actions.show_help", mode = "n" },
+        ["<C-e>"] = { "actions.close", mode = "n" },                 -- toggle
+        ["<CR>"] = { "actions.select", opts = { vertical = true } }, -- open in new window
+        ["<Tab>"] = { "actions.preview", mode = "n" },               -- preview
+        ["R"] = { "actions.refresh", mode = "n" },
+        ["."] = "actions.select",                                    -- go into
+        ["-"] = { "actions.parent", mode = "n" },                    -- go out of
+        ["_"] = { "actions.open_cwd", mode = "n" },
+        ["`"] = { "actions.cd", mode = "n" },
+        ["g~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+        ["gs"] = { "actions.change_sort", mode = "n" },
+        ["gx"] = "actions.open_external",
+        ["g."] = { "actions.toggle_hidden", mode = "n" },
+        ["g\\"] = { "actions.toggle_trash", mode = "n" },
+    },
+})
+vim.keymap.set("n", "<C-e>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- set_hl(0, "BlinkCmpSignatureHelp", { link = "BlinkCmpMenu" })
+-- set_hl(0, "BlinkCmpSignatureHelpBorder", { link = "BlinkCmpMenuBorder" })
+-- set_hl(0, "BlinkCmpSignatureHelpActiveParameter", { link = "LspSignatureActiveParameter" })
+
+-- native fuzzy finder with :find
+-- https://cherryramatis.xyz/posts/native-fuzzy-finder-in-neovim-with-lua-and-cool-bindings/
+if vim.fn.executable "rg" == 1 then
+    function _G.RgFindFiles(cmdarg, _cmdcomplete)
+        local fnames = vim.fn.systemlist('rg --files --hidden --color=never --glob="!.git"')
+        if #cmdarg == 0 then
+            return fnames
+        else
+            return vim.fn.matchfuzzy(fnames, cmdarg)
+        end
+    end
+
+    vim.o.findfunc = 'v:lua.RgFindFiles'
+end
+local function is_cmdline_type_find()
+    local cmdline_cmd = vim.fn.split(vim.fn.getcmdline(), ' ')[1]
+    return cmdline_cmd == 'find' or cmdline_cmd == 'fin'
+end
+vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
+    pattern = { '*' },
+    group = vim.api.nvim_create_augroup('CmdlineAutocompletion', { clear = true }),
+    callback = function(ev)
+        local function should_enable_autocomplete()
+            local cmdline_cmd = vim.fn.split(vim.fn.getcmdline(), ' ')[1]
+            return is_cmdline_type_find()
+        end
+        if ev.event == 'CmdlineChanged' and should_enable_autocomplete() then
+            vim.opt.wildmode = 'noselect:lastused,full'
+            vim.fn.wildtrigger()
+        end
+        if ev.event == 'CmdlineLeave' then
+            vim.opt.wildmode = 'full'
+        end
+    end
+})
+
+vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
+vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
+
+
+
+vim.cmd("colorscheme silentium")
 --vim.cmd("colorscheme retrobox")

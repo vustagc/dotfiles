@@ -19,7 +19,6 @@ plugins=(
     history-substring-search
     sudo
     timer
-    zsh-interactive-cd
     zsh-autosuggestions
     fast-syntax-highlighting
 )
@@ -57,13 +56,10 @@ alias obsidian="nvim $HOME/Vault"
 alias playswitch="gamemoderun $MEDIA/Games/ryujinx/publish/Ryujinx"
 alias clonesite="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent"
 alias scratch='nvim $(mktemp)'
-alias chat='$HOME/.config/user/scripts/local_chat.sh'
+alias chat='$HOME/.config/scripts/local_chat.sh'
 alias serve="kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim"
 
 #bindkey '^F' forward-char
-
-export ZVM_INSTALL="$HOME/.zvm/self"
-export PATH="$HOME/.zvm/bin:$ZVM_INSTALL:$HOME/bin:$PATH"
 
 export ANDROID_HOME="$HOME/Builds/android-sdk"
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
