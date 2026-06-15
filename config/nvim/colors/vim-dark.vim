@@ -9,7 +9,7 @@ set bg=dark
 
 hi clear
 if exists('syntax on')
-    syntax reset
+ syntax reset
 endif
 let g:colors_name = 'vim-dark'
 
@@ -323,38 +323,38 @@ hi! link LspSigActiveParameter ErrorMsg
 
 " TreeSitter
 if has('nvim')
-    hi! link @attribute.builtin VDMediumGray
-    hi! link @comment.error Comment
-    hi! link @comment.note Comment
-    hi! link @comment.todo Comment
-    hi! link @comment.warning Comment
-    hi! link @constant.builtin VDMediumGray
-    hi! link @constructor VDSoftWhite
-    hi! link @diff.delta VDBlue
-    hi! link @diff.minus VDRed
-    hi! link @diff.plus VDGreen
-    hi! link @function.builtin VDSoftWhite
-    hi! link @keyword.modifier VDMediumDarkGray
-    hi! link @keyword.type VDMediumDarkGray
-    hi! link @lsp.type.keyword VDMediumDarkGray
-    hi! link @lsp.type.class VDMediumGray
-    hi! link @lsp.type.macro VDMediumGray
-    hi! link @module.builtin VDMediumGray
-    hi! link @punctuation.bracket VDMediumGray
-    hi! link @punctuation.delimiter VDMediumDarkGray
-    hi! link @punctuation.special VDMediumGray
-    hi! link @string.escape VDMediumGray
-    hi! link @tag VDMediumGray
-    hi! link @tag.attribute VDSoftWhite
-    hi! link @tag.builtin VDMediumGray
-    hi! link @tag.delimiter VDMediumGray
-    hi! link @type VDMediumGray
-    hi! link @type.builtin VDMediumGray
-    hi! link @type.sql VDSoftWhite
-    hi! link @type.vim VDSoftWhite
-    hi! link @variable VDSoftWhite
-    hi! link @variable.builtin VDSoftWhite
-    hi! link @variable.parameter.builtin VDSoftWhite
+            hi! link @attribute.builtin VDMediumGray
+            hi! link @comment.error Comment
+            hi! link @comment.note Comment
+            hi! link @comment.todo Comment
+            hi! link @comment.warning Comment
+            hi! link @constant.builtin VDMediumGray
+            hi! link @constructor VDSoftWhite
+            hi! link @diff.delta VDBlue
+            hi! link @diff.minus VDRed
+            hi! link @diff.plus VDGreen
+            hi! link @function.builtin VDSoftWhite
+            hi! link @keyword.modifier VDMediumDarkGray
+            hi! link @keyword.type VDMediumDarkGray
+            hi! link @lsp.type.keyword VDMediumDarkGray
+            hi! link @lsp.type.class VDMediumGray
+            hi! link @lsp.type.macro VDMediumGray
+            hi! link @module.builtin VDMediumGray
+            hi! link @punctuation.bracket VDMediumGray
+            hi! link @punctuation.delimiter VDMediumDarkGray
+            hi! link @punctuation.special VDMediumGray
+            hi! link @string.escape VDMediumGray
+            hi! link @tag VDMediumGray
+            hi! link @tag.attribute VDSoftWhite
+            hi! link @tag.builtin VDMediumGray
+            hi! link @tag.delimiter VDMediumGray
+            hi! link @type VDMediumGray
+            hi! link @type.builtin VDMediumGray
+            hi! link @type.sql VDSoftWhite
+            hi! link @type.vim VDSoftWhite
+            hi! link @variable VDSoftWhite
+            hi! link @variable.builtin VDSoftWhite
+            hi! link @variable.parameter.builtin VDSoftWhite
 endif
 
 " Oil.nvim

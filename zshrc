@@ -58,6 +58,8 @@ alias clonesite="wget --mirror --convert-links --adjust-extension --page-requisi
 alias scratch='nvim $(mktemp)'
 alias chat='$HOME/.config/scripts/local_chat.sh'
 alias serve="kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim"
+alias wifi_enable="sudo $HOME/.config/scripts/wifi_on.sh"
+alias wifi_disable="sudo $HOME/.config/scripts/wifi_off.sh"
 
 #bindkey '^F' forward-char
 
