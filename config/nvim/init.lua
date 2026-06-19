@@ -8,11 +8,13 @@ vim.g.maplocalleader = " "
 vim.g.zig_fmt_parse_errors = 1
 vim.g.zig_fmt_autosave = 1
 
+vim.opt.statuscolumn = " "
+
 -- options
 opt.encoding = "utf-8"
 opt.background = "dark"
 opt.termguicolors = true
-opt.number = true
+opt.number = false
 -- opt.relativenumber = true
 -- opt.signcolumn = "yes"
 -- opt.showtabline = 2
