@@ -3,6 +3,6 @@
 ## Cloning
 
 ```bash
-git clone https://github.com/vustagc/dotfiles ~/.dotfiles
+git clone --recurse-submodules https://github.com/vustagc/dotfiles ~/.dotfiles
 rcup
 ```
