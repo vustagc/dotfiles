@@ -1,0 +1,21 @@
+# bottom row
+on_press
+36 = ydotool key 108:1 # down
+37 = ydotool key 103:1 # up
+38 = ydotool key 29:1 42:1 15:1 29:0 42:0 15:0 # ctrl+shift+tab
+39 = ydotool key 29:1 15:1 29:0 15:0 # ctrl+tab
+on_release
+36 = ydotool key 108:0
+37 = ydotool key 103:0
+
+# top row
+
+on_press
+40 = ydotool key 57:1 # space
+41 = playerctl next
+42 = ydotool key 105:1 # left
+43 = ydotool key 106:1 # right
+on_release
+40 = ydotool key 57:0
+42 = ydotool key 105:0
+43 = ydotool key 106:0

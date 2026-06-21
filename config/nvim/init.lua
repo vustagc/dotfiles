@@ -76,7 +76,7 @@ map("n", "L", ":tabnext<CR>")
 map("n", "<C-t>", ":term<CR>")
 map("n", "<A-n>", ":cnext<CR>")
 map("n", "<A-p>", ":cprev<CR>")
-
+map("n", "gz", ":!zeal \"<cword>\"&<CR><CR>")
 -- Commands
 
 -- Grep
@@ -206,7 +206,8 @@ vim.pack.add({
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/rmagatti/auto-session",
     "https://github.com/mfussenegger/nvim-dap",
-    "https://github.com/igorlfs/nvim-dap-view"
+    "https://github.com/igorlfs/nvim-dap-view",
+    "https://github.com/shortcuts/no-neck-pain.nvim"
 })
 
 require("auto-session").setup({
