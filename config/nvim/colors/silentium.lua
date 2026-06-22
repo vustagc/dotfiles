@@ -26,7 +26,8 @@ M.colors = {
 	gray = "#737373",
 	ghost = "#4D4D4D",
 	dark_gray = "#404040",
-	dark = nil, -- transparent
+        transparent = nil,
+	dark = "#141414", -- transparent
 	diff_add = "#273C29",
 	diff_change = "#4D4322",
 	diff_delete = "#492523",
@@ -92,8 +93,8 @@ function M.colorscheme()
 	hl("ModeMsg", { fg = M.accents.green })
 	hl("MoreMsg", { fg = M.accents.blue })
 	hl("NonText", { fg = M.colors.ghost })
-	hl("Normal", { bg = M.colors.dark, fg = M.colors.white })
-	hl("NormalFloat", { bg = M.colors.dark_gray, fg = M.colors.white })
+	hl("Normal", { bg = M.colors.transparent, fg = M.colors.white })
+	hl("NormalFloat", { bg = M.colors.transparent, fg = M.colors.white })
 	hl("OkMsg", { fg = M.accents.green })
 	hl("Operator", { link = "Normal" })
 	hl("Pmenu", { bg = M.colors.dark_gray })
