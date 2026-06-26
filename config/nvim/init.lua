@@ -5,8 +5,8 @@ local set_hl = vim.api.nvim_set_hl
 -- variables
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.zig_fmt_parse_errors = 1
-vim.g.zig_fmt_autosave = 1
+vim.g.zig_fmt_parse_errors = 0
+vim.g.zig_fmt_autosave = 0
 
 vim.opt.statuscolumn = " "
 
@@ -130,16 +130,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(ev)
         local opts = { buffer = ev.buf }
         map("n", "gd", vim.lsp.buf.definition, opts)
-        map("n", "gy", vim.lsp.buf.type_definition, opts)
-        map("n", "gi", vim.lsp.buf.implementation, opts)
         map("n", "gr", vim.lsp.buf.references, opts)
-        -- map("n", "<leader>g", vim.diagnostic.goto_next, opts)
-        -- map("n", "<leader>G", vim.diagnostic.goto_prev, opts)
         map("n", "gh", vim.lsp.buf.hover, opts)
         map("n", "<leader>ih", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
         end, opts)
-        map("n", "<F9>", vim.lsp.buf.code_action, opts)
+
+        -- should fix slow saves, I hope
+        vim.api.nvim_clear_autocmds({
+            group = "nvim.lsp.b_" .. ev.buf .. "_save",
+        })
     end,
 })
 
@@ -180,6 +180,18 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end,
 })
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+if capabilities.workspace then
+    capabilities.workspace.didChangeWatchedFiles = nil
+end
+
+capabilities.textDocument.semanticTokens.multilineTokenSupport = true
+
+vim.lsp.config('*', {
+    root_markers = { '.git', { 'build.zig' } },
+    capabilities = capabilities,
+})
 
 -- lsp
 vim.lsp.enable({
@@ -188,26 +200,14 @@ vim.lsp.enable({
     "lua_ls",
 })
 
-vim.lsp.config('*', {
-    root_markers = { '.git' },
-    capabilities = {
-        textDocument = {
-            semanticTokens = {
-                multilineTokenSupport = true,
-            }
-        }
-    }
-})
-
 -- plugins
 vim.pack.add({
     "https://github.com/stevearc/oil.nvim",
-    "https://github.com/3rd/image.nvim",
+    --"https://github.com/3rd/image.nvim",
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/rmagatti/auto-session",
     "https://github.com/mfussenegger/nvim-dap",
     "https://github.com/igorlfs/nvim-dap-view",
-    "https://github.com/shortcuts/no-neck-pain.nvim"
 })
 
 require("auto-session").setup({
@@ -216,10 +216,10 @@ require("auto-session").setup({
     auto_session_suppress_dirs = { "/", "~/", "~/Downloads", "~/Archives" },
 })
 
-require("image").setup({
-    backend = "sixel",
-    processor = "magick_cli",
-})
+-- require("image").setup({
+--     backend = "sixel",
+--     processor = "magick_cli",
+-- })
 require("oil").setup({
     default_file_explorer = true,
     use_default_keymaps = false,
@@ -288,7 +288,6 @@ vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
 
 vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
 vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
-
 
 
 vim.cmd("colorscheme silentium")
