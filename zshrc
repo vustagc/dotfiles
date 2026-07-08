@@ -11,11 +11,8 @@ ENABLE_CORRECTION="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd/mm/yyyy"
 plugins=(
-    github
-    gitignore
     zoxide 
     colored-man-pages
-    extract
     history-substring-search
     sudo
     timer
@@ -26,8 +23,6 @@ plugins=(
 bindkey '^K' history-substring-search-up
 bindkey '^J' history-substring-search-down
 
-source $ZSH/oh-my-zsh.sh
-
 # User configuration
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
@@ -36,6 +31,7 @@ else
 fi
 
 alias v="nvim"
+alias notes="cd ~/Notes && nvim -S Session.vim -c 'colorscheme retrobox' -c 'set wrap' -c 'set linebreak'"
 alias vi="nvim --noplugin"
 
 alias dot="git -C $DOTS"
@@ -45,8 +41,8 @@ alias fishrc="nvim $DOTS/config/fish/config.fish"
 alias hyprrc="nvim $DOTS/config/hypr/"
 alias waybarrc="nvim $DOTS/config/waybar/"
 alias rofirc="nvim $DOTS/config/rofi/config.rasi"
-alias ghosttyrc="nvim $DOTS/config/ghostty/config"
 alias footrc="nvim $DOTS/config/foot/foot.ini"
+alias tmuxrc="nvim ~/.tmux.conf"
 alias pianotermrc="nvim $DOTS/config/pianoterm/config"
 alias sshrc="nvim $HOME/.ssh/config"
 alias sourcerc="source $HOME/.zshrc"
@@ -61,6 +57,12 @@ alias serve="kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.z
 alias wifi_enable="sudo $HOME/.config/scripts/wifi_on.sh"
 alias wifi_disable="sudo $HOME/.config/scripts/wifi_off.sh"
 
+function touchsh () {
+    touch $1
+    chmod +x $1
+    echo '#!/bin/bash' >> $1
+}
+
 #bindkey '^F' forward-char
 
 export ANDROID_HOME="$HOME/Builds/android-sdk"
@@ -68,3 +70,5 @@ export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/pla
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
+source $ZSH/oh-my-zsh.sh
+

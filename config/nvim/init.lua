@@ -8,15 +8,16 @@ vim.g.maplocalleader = " "
 vim.g.zig_fmt_parse_errors = 0
 vim.g.zig_fmt_autosave = 0
 
-vim.opt.statuscolumn = " "
+--vim.opt.statuscolumn = " "
 
 -- options
+--opt.netrw = false
 opt.encoding = "utf-8"
 opt.background = "dark"
 opt.termguicolors = true
-opt.number = false
--- opt.relativenumber = true
--- opt.signcolumn = "yes"
+--opt.number = true
+opt.relativenumber = false
+--opt.signcolumn = "no"
 -- opt.showtabline = 2
 -- opt.cursorline = true
 opt.showmode = false
@@ -32,7 +33,7 @@ opt.writebackup = false
 opt.tabstop = 8
 opt.shiftwidth = 4
 opt.expandtab = true
-opt.undofile = true
+opt.undofile = false
 opt.ignorecase = true
 opt.smartcase = true
 opt.scrolloff = 0
@@ -105,6 +106,20 @@ vim.api.nvim_create_user_command('Grep', function(opts)
     vim.cmd('copen')
 end, { nargs = 1 })
 
+vim.api.nvim_create_user_command("Note", function(opts)
+    local filename
+    if opts.args ~= "" then
+        filename = opts.args
+    else
+        filename = os.date("%d-%m-%Y")
+    end
+    filename = filename .. ".md"
+    vim.cmd.edit(filename)
+    if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
+        vim.api.nvim_buf_set_lines(0, 0, 1, false, { "# " .. filename:gsub("%.md$", ""), "" })
+    end
+end, { nargs = "?" })
+
 vim.api.nvim_create_user_command("Mdone", function()
     require("user.commands").toggleStrikeThrough()
 end, {})
@@ -125,6 +140,18 @@ vim.api.nvim_create_user_command("Mviews", function(opts)
 end, { nargs = "+" })
 
 -- autocmds
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  callback = function()
+    local cwd = vim.fn.getcwd()
+    local desktop = vim.fn.expand("~/Desktop")
+    local notes = vim.fn.expand("~/Notes")
+
+    if cwd:sub(1, #desktop) == desktop or cwd:sub(1, #notes) == notes then
+      vim.cmd("mksession!")
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
@@ -189,7 +216,7 @@ end
 capabilities.textDocument.semanticTokens.multilineTokenSupport = true
 
 vim.lsp.config('*', {
-    root_markers = { '.git', { 'build.zig' } },
+    root_markers = { '.git' },
     capabilities = capabilities,
 })
 
@@ -205,16 +232,16 @@ vim.pack.add({
     "https://github.com/stevearc/oil.nvim",
     --"https://github.com/3rd/image.nvim",
     "https://github.com/kylechui/nvim-surround",
-    "https://github.com/rmagatti/auto-session",
+    -- "https://github.com/rmagatti/auto-session",
     "https://github.com/mfussenegger/nvim-dap",
     "https://github.com/igorlfs/nvim-dap-view",
 })
 
-require("auto-session").setup({
-    auto_save_enabled = true,
-    auto_restore_enabled = true,
-    auto_session_suppress_dirs = { "/", "~/", "~/Downloads", "~/Archives" },
-})
+-- require("auto-session").setup({
+--     auto_save_enabled = false,
+--     auto_restore_enabled = true,
+--     auto_session_suppress_dirs = { "/", "~/", "~/Downloads", "~/Archives" },
+-- })
 
 -- require("image").setup({
 --     backend = "sixel",
@@ -286,8 +313,8 @@ vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
     end
 })
 
-vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
-vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
+-- vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
+-- vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
 
 
 vim.cmd("colorscheme silentium")
