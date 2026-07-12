@@ -5,8 +5,12 @@ local set_hl = vim.api.nvim_set_hl
 -- variables
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.zig_fmt_parse_errors = 0
-vim.g.zig_fmt_autosave = 1
+-- vim.g.zig_fmt_parse_errors = 0
+-- vim.g.zig_fmt_autosave = 0
+
+-- this is actually the culprit most likely, 
+-- does risk some data loss, but worth it for immediate writes
+vim.opt.fsync = false
 
 -- options
 --opt.netrw = false
@@ -40,6 +44,7 @@ opt.smartcase = true
 opt.scrolloff = 0
 opt.sidescrolloff = 0
 opt.laststatus = 2
+vim.opt.shadafile = "NONE"
 opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
 
 
@@ -47,19 +52,19 @@ opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
 local zen = false
 
 local function toggle_zen()
-  zen = not zen
+    zen = not zen
 
-  if zen then
-    vim.opt.statuscolumn = ""
-    vim.opt.number = false
-    vim.opt.relativenumber = false
-    vim.opt.laststatus = 0
-  else
-    vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
-    vim.opt.number = true
-    vim.opt.relativenumber = true
-    vim.opt.laststatus = 2
-  end
+    if zen then
+        vim.opt.statuscolumn = ""
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+        vim.opt.laststatus = 0
+    else
+        vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
+        vim.opt.number = true
+        vim.opt.relativenumber = true
+        vim.opt.laststatus = 2
+    end
 end
 
 vim.api.nvim_create_user_command("Zen", toggle_zen, {})
@@ -166,22 +171,22 @@ end, { nargs = "+" })
 -- autocmds
 --
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function() 
-        vim.lsp.buf.format({ async = false })
-    end
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--     callback = function()
+--         vim.lsp.buf.format({ async = false })
+--     end
+-- })
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
-  callback = function()
-    local cwd = vim.fn.getcwd()
-    local desktop = vim.fn.expand("~/Desktop")
-    local notes = vim.fn.expand("~/Notes")
+    callback = function()
+        local cwd = vim.fn.getcwd()
+        local desktop = vim.fn.expand("~/Desktop")
+        local notes = vim.fn.expand("~/Notes")
 
-    if cwd:sub(1, #desktop) == desktop or cwd:sub(1, #notes) == notes then
-      vim.cmd("mksession!")
-    end
-  end,
+        if cwd:sub(1, #desktop) == desktop or cwd:sub(1, #notes) == notes then
+            vim.cmd("mksession!")
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -194,6 +199,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "<leader>ih", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
         end, opts)
+
+
+        -- local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        -- if client then
+        --     client.server_capabilities.semanticTokensProvider = nil
+        -- end
 
         -- should fix slow saves, I hope
         vim.api.nvim_clear_autocmds({
@@ -256,37 +267,30 @@ vim.lsp.config('*', {
 vim.lsp.enable({
     -- "zls",
     "zigscient",
-    "clangd",
-    "lua_ls",
+    -- "clangd",
+    -- "lua_ls",
 })
 
 -- plugins
 vim.pack.add({
     "https://github.com/stevearc/oil.nvim",
-    --"https://github.com/3rd/image.nvim",
     "https://github.com/kylechui/nvim-surround",
-    -- "https://github.com/rmagatti/auto-session",
-    "https://github.com/mfussenegger/nvim-dap",
-    "https://github.com/igorlfs/nvim-dap-view",
+    "https://github.com/3rd/image.nvim",
+    -- "https://github.com/mfussenegger/nvim-dap",
+    -- "https://github.com/igorlfs/nvim-dap-view",
 })
 
--- require("auto-session").setup({
---     auto_save_enabled = false,
---     auto_restore_enabled = true,
---     auto_session_suppress_dirs = { "/", "~/", "~/Downloads", "~/Archives" },
--- })
+require("image").setup({
+    backend = "sixel",
+    processor = "magick_cli",
+})
 
--- require("image").setup({
---     backend = "sixel",
---     processor = "magick_cli",
--- })
 require("oil").setup({
     default_file_explorer = true,
     use_default_keymaps = false,
     view_options = {
         show_hidden = false,
     },
-
     keymaps = {
         ["g?"] = { "actions.show_help", mode = "n" },
         ["<C-e>"] = { "actions.close", mode = "n" },                 -- toggle
@@ -345,6 +349,7 @@ vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
         end
     end
 })
+
 
 -- vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
 -- vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
