@@ -66,7 +66,8 @@
         "orientation": "inherit",
         "drawer": {
             "transition-duration": 500,
-            "transition-left-to-right": false
+            "transition-left-to-right": false,
+            "click-to-reveal": true
         },
         "modules": [
             "custom/trayindicator",

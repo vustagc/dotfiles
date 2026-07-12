@@ -6,20 +6,21 @@ local set_hl = vim.api.nvim_set_hl
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.zig_fmt_parse_errors = 0
-vim.g.zig_fmt_autosave = 0
-
---vim.opt.statuscolumn = " "
+vim.g.zig_fmt_autosave = 1
 
 -- options
 --opt.netrw = false
+vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
+--vim.opt.statuscolumn = ""
 opt.encoding = "utf-8"
 opt.background = "dark"
 opt.termguicolors = true
---opt.number = true
-opt.relativenumber = false
+opt.number = true
+opt.relativenumber = true
+opt.numberwidth = 4
 --opt.signcolumn = "no"
 -- opt.showtabline = 2
--- opt.cursorline = true
+opt.cursorline = false
 opt.showmode = false
 opt.splitright = true
 opt.splitbelow = true
@@ -38,8 +39,31 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.scrolloff = 0
 opt.sidescrolloff = 0
-opt.laststatus = 0
+opt.laststatus = 2
 opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
+
+
+-- zen mode
+local zen = false
+
+local function toggle_zen()
+  zen = not zen
+
+  if zen then
+    vim.opt.statuscolumn = ""
+    vim.opt.number = false
+    vim.opt.relativenumber = false
+    vim.opt.laststatus = 0
+  else
+    vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
+    vim.opt.number = true
+    vim.opt.relativenumber = true
+    vim.opt.laststatus = 2
+  end
+end
+
+vim.api.nvim_create_user_command("Zen", toggle_zen, {})
+vim.cmd("cabbrev zen Zen")
 
 -- variables
 vim.diagnostic.config({
@@ -140,6 +164,14 @@ vim.api.nvim_create_user_command("Mviews", function(opts)
 end, { nargs = "+" })
 
 -- autocmds
+--
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    callback = function() 
+        vim.lsp.buf.format({ async = false })
+    end
+})
+
 vim.api.nvim_create_autocmd("VimLeavePre", {
   callback = function()
     local cwd = vim.fn.getcwd()
@@ -222,7 +254,8 @@ vim.lsp.config('*', {
 
 -- lsp
 vim.lsp.enable({
-    "zls",
+    -- "zls",
+    "zigscient",
     "clangd",
     "lua_ls",
 })
