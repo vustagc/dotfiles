@@ -1,3 +1,5 @@
+alias ODIN_ROOT="~/Builds/odin"
+export PATH="$ODIN_ROOT:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
 PROMPT='%F{yellow}%~%f %F{gray}>%f '
@@ -19,9 +21,6 @@ plugins=(
     zsh-autosuggestions
     fast-syntax-highlighting
 )
-
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
 
 # User configuration
 if [[ -n $SSH_CONNECTION ]]; then
@@ -72,3 +71,5 @@ export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/pla
 # export LANG=en_US.UTF-8
 source $ZSH/oh-my-zsh.sh
 
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down

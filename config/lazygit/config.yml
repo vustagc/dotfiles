@@ -60,10 +60,8 @@ keybinding:
     # scrollDownMain-alt2: <c-d>
     executeShellCommand: ':'
     createRebaseOptionsMenu: m
-
     # 'Files' appended for legacy reasons
     pushFiles: P
-
     # 'Files' appended for legacy reasons
     pullFiles: p
     refresh: R
@@ -88,6 +86,7 @@ keybinding:
     increaseRenameSimilarityThreshold: )
     decreaseRenameSimilarityThreshold: (
     openDiffTool: <c-t>
+    newWorktree: w
   status:
     checkForUpdate: u
     recentRepos: <enter>
@@ -131,8 +130,6 @@ keybinding:
     fetchRemote: f
     addForkRemote: F
     sortOrder: s
-  worktrees:
-    viewWorktreeOptions: w
   commits:
     squashDown: s
     renameCommit: r
