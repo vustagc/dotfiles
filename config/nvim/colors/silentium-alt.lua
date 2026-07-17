@@ -16,11 +16,19 @@ M.accents = {
         yellow = "#F6CE4E",
         peach = "#FFB07C",
         orange = "#FF8E29",
+
+        brown = "#9A601D",
+        brown_light = "#F3911F",
+
+        frost = "#8fbcbb",
+        frosty = "#88c0d0",
+        chilly = "#81a1c1",
+        icy = "#5e81ac"
 }
 
 --- @class Colors
 M.colors = {
-        accent = M.accents.yellow,
+        accent = M.accents.pink,
         white = "#E6E6E6",
         light_gray = "#A6A6A6",
         gray = "#737373",
@@ -56,6 +64,7 @@ function M.colorscheme()
         hl("@tag.builtin", { fg = M.colors.accent })
         hl("@tag.delimiter", { link = "Normal" })
         hl("@variable", { link = "Normal" })
+        -- hl("@variable", { fg = "Normal" })
         hl("Added", { fg = M.accents.green })
         hl("Changed", { fg = M.accents.yellow })
         hl("ColorColumn", { bg = M.colors.dark_gray })

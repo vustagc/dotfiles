@@ -32,20 +32,22 @@ opt.wrap = false
 opt.mouse = "a"
 opt.hidden = true
 opt.updatetime = 300
-opt.swapfile = false
-opt.backup = false
-opt.writebackup = false
 opt.tabstop = 8
 opt.shiftwidth = 8
 opt.expandtab = true
-opt.undofile = false
 opt.ignorecase = true
 opt.smartcase = true
 opt.scrolloff = 0
 opt.sidescrolloff = 0
 opt.laststatus = 2
-vim.opt.shadafile = "NONE"
+opt.swapfile = false
+opt.backup = false
+opt.writebackup = false
+opt.undofile = false
+-- vim.opt.shadafile = "NONE"
 opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
+
+vim.opt.makeprg = "odin build ."
 
 -- zen mode
 local zen = false
@@ -81,13 +83,12 @@ vim.diagnostic.config({
 vim.cmd("tnoremap <C-q> <C-\\><C-n>")
 map("n", "<C-f>", function()
         vim.lsp.buf.format({ async = false })
-        vim.lsp.buf.code_action({
-                context = { only = { "source.fixAll" } },
-                apply = true,
-        })
+        vim.cmd('wa')
 end, { silent = true })
+
 map("n", "<C-s>", ":noa wa<CR>", { silent = true })
 map("n", "<C-b>", ":make <CR>", { silent = true })
+map("n", "<C-n>", ":Odin <CR>", { silent = true })
 map("n", "<C-s-b>", ":make run<CR>", { silent = true })
 map("v", "<C-y>", '"+y', { silent = true })
 map("n", "<C-p>", '"+p', { silent = true })
@@ -134,62 +135,34 @@ vim.api.nvim_create_user_command('Grep', function(opts)
         vim.cmd('copen')
 end, { nargs = 1 })
 
-vim.api.nvim_create_user_command("Note", function(opts)
-        local filename
-        if opts.args ~= "" then
-                filename = opts.args
-        else
-                filename = os.date("%d-%m-%Y")
-        end
-        filename = filename .. ".md"
-        vim.cmd.edit(filename)
-        if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
-                vim.api.nvim_buf_set_lines(0, 0, 1, false, { "# " .. filename:gsub("%.md$", ""), "" })
-        end
-end, { nargs = "?" })
-
-vim.api.nvim_create_user_command("Mdone", function()
-        require("user.commands").toggleStrikeThrough()
-end, {})
-
-vim.api.nvim_create_user_command("Mtmp", function()
-        require("user.commands").mktemp()
-end, {})
-vim.api.nvim_create_user_command("Mput", function(opts)
-        require("user.commands").echoOutput(opts)
-end, { nargs = "+" })
-vim.api.nvim_create_user_command("Mview", function(opts)
-        require("user.commands").viewOutput(opts)
-end, { nargs = "+" })
-
-vim.api.nvim_create_user_command("Mviews", function(opts)
-        vim.fn.execute("vsplit")
-        require("user.commands").viewOutput(opts)
-end, { nargs = "+" })
+local user_cmd = vim.api.nvim_create_user_command
+user_cmd("Odin", function() require("user.odin").build(opts) end, {})
+user_cmd("Note", function(opts) require("user.commands").makeNote(opts) end, { nargs = "?" })
+user_cmd("Mdone", function() require("user.commands").toggleStrikeThrough() end, {})
+user_cmd("Mtmp", function() require("user.commands").mktemp() end, {})
+user_cmd("Mput", function(opts) require("user.commands").echoOutput(opts) end, { nargs = "+" })
+user_cmd("Mview", function(opts) require("user.commands").viewOutput(opts) end, { nargs = "+" })
 
 -- autocmds
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--         callback = function()
+--                 if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+--                         vim.lsp.buf.format({ async = false })
+--                 end
+--         end
+-- })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-        callback = function()
-                if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
-                        vim.lsp.buf.format({ async = false })
-                end
-        end
-})
-
-vim.api.nvim_create_autocmd("VimLeavePre", {
+local auto_cmd = vim.api.nvim_create_autocmd
+auto_cmd("VimLeavePre", {
         callback = function()
                 local cwd = vim.fn.getcwd()
-                local desktop = vim.fn.expand("~/Desktop")
-                local notes = vim.fn.expand("~/Notes")
-
-                if cwd:sub(1, #desktop) == desktop or cwd:sub(1, #notes) == notes then
-                        vim.cmd("mksession!")
+                if vim.fn.isdirectory(cwd .. "/.git") == 1 then
+                        vim.cmd("mks! .sess.vim")
                 end
         end,
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
+auto_cmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
                 local opts = { buffer = ev.buf }
@@ -199,21 +172,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 map("n", "<leader>ih", function()
                         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
                 end, opts)
-
-
-                -- local client = vim.lsp.get_client_by_id(ev.data.client_id)
-                -- if client then
-                --     client.server_capabilities.semanticTokensProvider = nil
-                -- end
-
-                -- should fix slow saves, I hope
-                vim.api.nvim_clear_autocmds({
-                        group = "nvim.lsp.b_" .. ev.buf .. "_save",
-                })
         end,
 })
 
-vim.api.nvim_create_autocmd("CursorMoved", {
+auto_cmd("CursorMoved", {
         group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
         callback = function()
                 if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
@@ -224,43 +186,8 @@ vim.api.nvim_create_autocmd("CursorMoved", {
         end,
 })
 
-vim.api.nvim_create_autocmd('TermOpen', {
-        command = 'setlocal signcolumn=auto',
-})
-
-local ns = vim.api.nvim_create_namespace('my.terminal.prompt')
-vim.api.nvim_create_autocmd('TermRequest', {
-        callback = function(args)
-                if string.match(args.data.sequence, '^\027]133;A') then
-                        local lnum = args.data.cursor[1]
-                        vim.api.nvim_buf_set_extmark(args.buf, ns, lnum - 1, 0, {
-                                sign_text = '▶',
-                                sign_hl_group = 'SpecialChar',
-                        })
-                end
-        end,
-})
-
-vim.api.nvim_create_autocmd("TermOpen", {
-        group = vim.api.nvim_create_augroup("custom-term-settings", { clear = true }),
-        callback = function()
-                vim.opt_local.number = false
-                vim.opt_local.relativenumber = false
-                vim.opt_local.signcolumn = "no"
-        end,
-})
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-if capabilities.workspace then
-        capabilities.workspace.didChangeWatchedFiles = nil
-end
-
-capabilities.textDocument.semanticTokens.multilineTokenSupport = true
-
 vim.lsp.config('*', {
         root_markers = { '.git' },
-        capabilities = capabilities,
 })
 
 -- lsp
@@ -268,8 +195,7 @@ vim.lsp.enable({
         "ols",
         "lua_ls",
         "zigscient",
-        -- "zls",
-        -- "clangd",
+        "clangd",
 })
 
 -- plugins
@@ -278,8 +204,6 @@ vim.pack.add({
         "https://github.com/kylechui/nvim-surround",
         "https://github.com/3rd/image.nvim",
         "https://github.com/christoomey/vim-tmux-navigator",
-        -- "https://github.com/mfussenegger/nvim-dap",
-        -- "https://github.com/igorlfs/nvim-dap-view",
 })
 
 require("image").setup({
@@ -312,10 +236,6 @@ require("oil").setup({
 })
 vim.keymap.set("n", "<C-e>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
--- set_hl(0, "BlinkCmpSignatureHelp", { link = "BlinkCmpMenu" })
--- set_hl(0, "BlinkCmpSignatureHelpBorder", { link = "BlinkCmpMenuBorder" })
--- set_hl(0, "BlinkCmpSignatureHelpActiveParameter", { link = "LspSignatureActiveParameter" })
-
 -- native fuzzy finder with :find
 -- https://cherryramatis.xyz/posts/native-fuzzy-finder-in-neovim-with-lua-and-cool-bindings/
 if vim.fn.executable "rg" == 1 then
@@ -334,7 +254,7 @@ local function is_cmdline_type_find()
         local cmdline_cmd = vim.fn.split(vim.fn.getcmdline(), ' ')[1]
         return cmdline_cmd == 'find' or cmdline_cmd == 'fin'
 end
-vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
+auto_cmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
         pattern = { '*' },
         group = vim.api.nvim_create_augroup('CmdlineAutocompletion', { clear = true }),
         callback = function(ev)
@@ -357,5 +277,9 @@ vim.api.nvim_create_autocmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
 -- vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
 
 
-vim.cmd("colorscheme silentium")
+--vim.cmd("colorscheme silentium")
+vim.cmd("colorscheme silentium-alt")
+--vim.cmd("colorscheme gruvbox")
+--vim.cmd("colorscheme vim-dark")
+
 --vim.cmd("colorscheme retrobox")

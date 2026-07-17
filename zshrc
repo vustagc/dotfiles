@@ -1,8 +1,8 @@
 alias ODIN_ROOT="~/Builds/odin"
 export PATH="$ODIN_ROOT:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME=""
-PROMPT='%F{yellow}%~%f %F{gray}>%f '
+ZSH_THEME="evan"
+#PROMPT='%F{cyan}%~%f %F{gray}>%f '
 
 PROMPT_COMMAND='echo -e -n "\\x1b[5 q"'
 precmd() { eval "$PROMPT_COMMAND" }
@@ -30,7 +30,7 @@ else
 fi
 
 alias v="nvim"
-alias notes="cd ~/Notes && nvim -S Session.vim -c 'colorscheme retrobox' -c 'set wrap' -c 'set linebreak'"
+alias notes="cd ~/Notes && nvim -S .sess.vim -c 'colorscheme retrobox' -c 'set wrap' -c 'set linebreak'"
 alias vi="nvim --noplugin"
 
 alias dot="git -C $DOTS"
