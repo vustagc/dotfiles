@@ -272,14 +272,5 @@ auto_cmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
         end
 })
 
-
--- vim.keymap.set('c', '<c-v>', '<home><s-right><c-w>vs<end>', { desc = 'Change command to :vs' })
--- vim.keymap.set('c', '<c-s>', '<home><s-right><c-w>sp<end>', { desc = 'Change command to :sp' })
-
-
+vim.cmd("colorscheme zazen")
 --vim.cmd("colorscheme silentium")
-vim.cmd("colorscheme silentium-alt")
---vim.cmd("colorscheme gruvbox")
---vim.cmd("colorscheme vim-dark")
-
---vim.cmd("colorscheme retrobox")

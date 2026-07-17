@@ -28,9 +28,19 @@ M.accents = {
 
 --- @class Colors
 M.colors = {
-        accent = M.accents.pink,
+        -- accent = M.accents.rose,
+        accent = "#A6A6A6",
+        inbetween = M.accents.rose,
+
+        frost = "#8fbcbb",
+        frosty = "#88c0d0",
+        chilly = "#81a1c1",
+        icy = "#5e81ac",
+
         white = "#E6E6E6",
         light_gray = "#A6A6A6",
+        --inbetween = "#a08080",
+        --inbetween = M.accents.orange,
         gray = "#737373",
         ghost = "#4D4D4D",
         dark_gray = "#404040",
@@ -64,13 +74,12 @@ function M.colorscheme()
         hl("@tag.builtin", { fg = M.colors.accent })
         hl("@tag.delimiter", { link = "Normal" })
         hl("@variable", { link = "Normal" })
-        -- hl("@variable", { fg = "Normal" })
         hl("Added", { fg = M.accents.green })
         hl("Changed", { fg = M.accents.yellow })
         hl("ColorColumn", { bg = M.colors.dark_gray })
         hl("Comment", { fg = M.colors.gray })
         hl("Conceal", { fg = M.colors.ghost })
-        hl("Constant", { link = "Normal" })
+        hl("Constant", { fg = M.colors.inbetween })
         hl("CursorColumn", { bg = M.colors.dark_gray })
         hl("CursorLine", { bg = M.colors.dark_gray })
         hl("Delimiter", { link = "Normal" })
@@ -95,6 +104,7 @@ function M.colorscheme()
         hl("FloatShadowThrough", { bg = M.colors.gray, blend = 100 })
         hl("Folded", { bg = M.colors.dark_gray, fg = M.colors.gray })
         hl("Function", { link = "Normal" })
+        -- hl("Function", { fg = M.colors.func })
         hl("Identifier", { link = "Normal" })
         hl("Keyword", { fg = M.colors.accent })
         hl("CursorLineNr", { fg = M.colors.light_gray })
@@ -128,16 +138,17 @@ function M.colorscheme()
         hl("Statement", { fg = M.colors.accent })
         hl("StatusLine", { bg = M.colors.ghost, fg = M.colors.white })
         hl("StatusLineNC", { bg = M.colors.dark_gray, fg = M.colors.white })
-        hl("String", { fg = M.colors.light_gray })
+        hl("String", { fg = M.colors.inbetween })
+        hl("Character", { fg = M.colors.light_gray })
         hl("TabLineSel", { fg = M.colors.white })
         hl("Title", { fg = M.colors.white })
-        hl("Todo", { link = "Normal" })
+        hl("Todo", { fg = M.colors.gray, bg = M.colors.dark })
         hl("Type", { link = "Normal" })
         hl("Visual", { bg = M.colors.dark_gray })
         hl("WarningMsg", { fg = M.accents.yellow })
         hl("WinBar", { bg = M.colors.accent, fg = M.colors.dark })
         hl("WinBarNC", { bg = M.colors.accent, fg = M.colors.dark })
-        hl("WinSeparator", { fg = M.colors.gray })
+        hl("WinSeparator", { fg = M.colors.light_gray })
 
         vim.g.terminal_color_0 = M.colors.dark_gray
         vim.g.terminal_color_1 = M.accents.red
