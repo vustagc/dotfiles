@@ -61,9 +61,10 @@ function M.build()
 
                         if result.code ~= 0 and #items > 0 then
                                 vim.cmd('copen')
-                                vim.notify("Errors", vim.log.levels.ERROR, { title = "odin build" })
+                                vim.notify("Build errors", vim.log.levels.ERROR, { title = "odin build" })
                         else
-                                vim.notify("Built", vim.log.levels.INFO, { title = "odin build" })
+                                vim.cmd('cclose')
+                                vim.notify("Build complete", vim.log.levels.INFO, { title = "odin build" })
                         end
 
                         --

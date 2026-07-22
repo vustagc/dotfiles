@@ -9,7 +9,7 @@ precmd() { eval "$PROMPT_COMMAND" }
 
 zstyle ':omz:update' mode disabled  # disable automatic updates
 DISABLE_AUTO_TITLE="true"
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd/mm/yyyy"
 plugins=(
@@ -28,6 +28,9 @@ if [[ -n $SSH_CONNECTION ]]; then
 else
   export EDITOR='nvim'
 fi
+
+alias day="ps aux | grep foot | awk '{print $2}' | head -n 1 | xargs kill -s SIGUSR2 &> /dev/null"
+alias night="ps aux | grep foot | awk '{print $2}' | head -n 1 | xargs kill -s SIGUSR1 &> /dev/null"
 
 alias v="nvim"
 alias notes="cd ~/Notes && nvim -S .sess.vim -c 'colorscheme retrobox' -c 'set wrap' -c 'set linebreak'"

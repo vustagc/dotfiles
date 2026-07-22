@@ -45,7 +45,7 @@ opt.backup = false
 opt.writebackup = false
 opt.undofile = false
 -- vim.opt.shadafile = "NONE"
-opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
+--opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
 
 vim.opt.makeprg = "odin build ."
 
@@ -89,6 +89,7 @@ end, { silent = true })
 map("n", "<C-s>", ":noa wa<CR>", { silent = true })
 map("n", "<C-b>", ":make <CR>", { silent = true })
 map("n", "<C-n>", ":Odin <CR>", { silent = true })
+map("n", "<C-m>", ":!odin run . <CR>", { silent = true })
 map("n", "<C-s-b>", ":make run<CR>", { silent = true })
 map("v", "<C-y>", '"+y', { silent = true })
 map("n", "<C-p>", '"+p', { silent = true })
@@ -142,15 +143,6 @@ user_cmd("Mdone", function() require("user.commands").toggleStrikeThrough() end,
 user_cmd("Mtmp", function() require("user.commands").mktemp() end, {})
 user_cmd("Mput", function(opts) require("user.commands").echoOutput(opts) end, { nargs = "+" })
 user_cmd("Mview", function(opts) require("user.commands").viewOutput(opts) end, { nargs = "+" })
-
--- autocmds
--- vim.api.nvim_create_autocmd("BufWritePre", {
---         callback = function()
---                 if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
---                         vim.lsp.buf.format({ async = false })
---                 end
---         end
--- })
 
 local auto_cmd = vim.api.nvim_create_autocmd
 auto_cmd("VimLeavePre", {
@@ -272,5 +264,4 @@ auto_cmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
         end
 })
 
-vim.cmd("colorscheme zazen")
---vim.cmd("colorscheme silentium")
+vim.cmd("colorscheme silentium")

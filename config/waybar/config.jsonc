@@ -26,7 +26,7 @@
     },
 
     "pulseaudio": {
-        "format": "<span font='12' rise='-1000'>{icon}</span> {volume}%",
+        "format": "<span font='10' rise='-1000'>{icon}</span> {volume}%",
         "format-muted": "󰟎",
         "format-icons": { "default": "󰋋" },
         "tooltip-format": "{volume}%",
@@ -43,7 +43,7 @@
         "calendar": {
             "mode": "month",
             "format": {
-                "months": "<span color='#d79921' font='12'><b>{}</b></span>",
+                "months": "<span color='#d79921' font='10'><b>{}</b></span>",
                 "weekdays": "<span color='#fe8019'><b>{}</b></span>",
                 "days": "<span color='#ebdbb2'><b>{}</b></span>",
                 "today": "<span color='#d3869b'><b>{}</b></span>"
@@ -55,7 +55,7 @@
         "interface": "enp8s0",
         "format": "☠️",
         "format-wifi": "",
-        "format-ethernet": "<span font='12' rise='000'>󰈀</span>",
+        "format-ethernet": "<span font='10' rise='000'>󰈀</span>",
         "format-disconnected": "",
         "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
         "tooltip-format-ethernet": "{ifname} ({bandwidthDownBits}) 󰈀",
@@ -76,7 +76,7 @@
     },
 
     "custom/trayindicator": {
-        "format": "<span font='12' rise='000'></span>",
+        "format": "<span font='10' rise='000'></span>",
         "tooltip": false
     },
 
