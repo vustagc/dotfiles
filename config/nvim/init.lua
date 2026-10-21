@@ -23,7 +23,7 @@ opt.number = true
 opt.relativenumber = true
 opt.numberwidth = 4
 --opt.signcolumn = "no"
--- opt.showtabline = 2
+opt.showtabline = 2
 opt.cursorline = false
 opt.showmode = false
 opt.splitright = true
@@ -43,7 +43,7 @@ opt.laststatus = 2
 opt.swapfile = false
 opt.backup = false
 opt.writebackup = false
-opt.undofile = false
+opt.undofile = true
 -- vim.opt.shadafile = "NONE"
 --opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
 
@@ -103,7 +103,6 @@ map("n", "J", ":bprevious<CR>")
 map("n", "K", ":bnext<CR>")
 map("n", "H", ":tabprev<CR>")
 map("n", "L", ":tabnext<CR>")
-map("n", "<C-t>", ":term<CR>")
 map("n", "<A-n>", ":cnext<CR>")
 map("n", "<A-p>", ":cprev<CR>")
 map("n", "gz", ":!zeal \"<cword>\"&<CR><CR>")
@@ -206,10 +205,56 @@ vim.lsp.enable({
 -- plugins
 vim.pack.add({
         "https://github.com/stevearc/oil.nvim",
+        "https://github.com/stevearc/aerial.nvim",
         "https://github.com/kylechui/nvim-surround",
         "https://github.com/3rd/image.nvim",
         "https://github.com/christoomey/vim-tmux-navigator",
+
+        "https://github.com/nvim-tree/nvim-web-devicons",
 })
+
+local aerial = require("aerial")
+aerial.setup({
+        on_attach = function(bufnr)
+                vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+                vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
+        end,
+
+        keymaps = {
+                ["?"] = "actions.show_help",
+                ["g?"] = "actions.show_help",
+                ["."] = "actions.jump",
+                ["<2-LeftMouse>"] = "actions.jump",
+                ["<C-v>"] = "actions.jump_vsplit",
+                ["<C-s>"] = "actions.jump_split",
+                ["p"] = "actions.scroll",
+                ["<C-j>"] = "actions.down_and_scroll",
+                ["<C-k>"] = "actions.up_and_scroll",
+                ["q"] = "actions.close",
+        },
+
+        ignore = {
+                unlisted_buffers = true,
+                diff_windows = true,
+                filetypes = { "oil" },
+        },
+
+        layout = {
+                width = 30,
+                win_opts = {},
+                default_direction = "prefer_left",
+                placement = "edge",
+                resize_to_content = false,
+        },
+
+        attach_mode = "global",
+        open_automatic = function(bufnr)
+                return not aerial.was_closed()
+        end,
+
+        open_automatic = true,
+})
+vim.keymap.set("n", "<C-t>", "<cmd>AerialToggle! left<CR>")
 
 require("image").setup({
         backend = "sixel",

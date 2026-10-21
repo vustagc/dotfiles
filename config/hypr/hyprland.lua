@@ -25,7 +25,7 @@ hl.on("hyprland.start", function()
         hl.exec_cmd("hyprctl setcursor " .. cursor)
         hl.exec_cmd("waybar")
         hl.exec_cmd("pianoterm -n Roland -c ~/.config/pianoterm/config_playback")
-        hl.exec_cmd("pianoterm -n LPD8 -c ~/.config/pianoterm/config_pad")
+        -- hl.exec_cmd("pianoterm -n LPD8 -c ~/.config/pianoterm/config_pad")
         hl.exec_cmd(
                 "kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim")
         hl.exec_cmd("hyprpm reload")
@@ -85,14 +85,10 @@ hl.config({
                 },
         },
 
-        plugin = {
-                hypr_autoscroll = {
-                        enabled = true,
-                        sensitivity = 1,
-                        dead_zone = 5,
-                        button = 276,
-                },
+        animations = {
+                enabled = false
         },
+
 })
 
 -- smart gaps
@@ -119,16 +115,17 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd(screenshot .. "-m region"))
 -- windows
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
+hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
 hl.bind(mainMod .. " + " .. left, hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + " .. right, hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + " .. up, hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + " .. down, hl.dsp.focus({ direction = "down" }))
 
-hl.bind(mainMod .. " + SHIFT + " .. left, hl.dsp.move({ direction = "left" }))
-hl.bind(mainMod .. " + SHIFT + " .. right, hl.dsp.move({ direction = "right" }))
-hl.bind(mainMod .. " + SHIFT + " .. up, hl.dsp.move({ direction = "up" }))
-hl.bind(mainMod .. " + SHIFT + " .. down, hl.dsp.move({ direction = "down" }))
+hl.bind(mainMod .. " + SHIFT + " .. left, hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainMod .. " + SHIFT + " .. right, hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainMod .. " + SHIFT + " .. up, hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainMod .. " + SHIFT + " .. down, hl.dsp.window.move({ direction = "down" }))
 
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
@@ -142,7 +139,7 @@ end
 
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
         { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ 5%-"),
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
         { locked = true, repeating = true })
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"),
         { locked = true, repeating = true })

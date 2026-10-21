@@ -1,0 +1,238 @@
+// This config is in the KDL format: https://kdl.dev
+// "/-" comments out the following node.
+// Check the wiki for a full description of the configuration:
+// https://niri-wm.github.io/niri/Configuration:-Introduction
+
+// Input device configuration.
+// Find the full list of options on the wiki:
+// https://niri-wm.github.io/niri/Configuration:-Input
+input {
+    keyboard {
+        xkb {
+            layout "pt"
+            variant "nodeadkeys"
+            model "pc105"
+        }
+
+        repeat-rate 20
+        repeat-delay 200
+        // numlock
+    }
+    mouse {
+        // off
+        // natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "no-scroll"
+    }
+    focus-follows-mouse
+    // warp-mouse-to-focus
+}
+
+output "DP-1" {
+    mode "1920x1080@74"
+    // hot-corners {}
+}
+
+// output "HDMI-1" {
+//     transform 180
+//     position x=1280 y=0
+// }
+
+layout {
+    gaps 4
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.5; }
+
+    focus-ring {
+        off
+    }
+
+    border {
+        off
+    }
+}
+
+spawn-at-startup "waybar"
+spawn-sh-at-startup "swaybg -i ~/Documents/Wallpapers/samurai.jpg -m fill"
+spawn-sh-at-startup "gammastep -c ~/.config/gammastep/config.ini"
+spawn-sh-at-startup "eval $(ssh-agent -s);"
+spawn-sh-at-startup "systemctl --user start hyprpolkitagent"
+spawn-sh-at-startup "wl-paste --watch cliphist store"
+spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+spawn-sh-at-startup "pianoterm -n Roland -c ~/.config/pianoterm/config_playback"
+// spawn-at-startup "pianoterm -n LPD8 -c ~/.config/pianoterm/config_pad"
+spawn-sh-at-startup "kiwix-serve -d -p 1024 $MEDIA/Kiwix/wikipedia_en_all_maxi_2026-02.zim $MEDIA/Kiwix/archlinux_en_all_maxi_2025-09.zim"
+
+// To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
+// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+// client-side
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+animations {
+    // off
+    slowdown 0.5
+}
+
+/-window-rule {
+    // This regular expression is intentionally made as specific as possible,
+    // since this is the default config, and we want no false positives.
+    // You can get away with just app-id="wezterm" if you want.
+    match app-id=r#"^org\.wezfurlong\.wezterm$"#
+    default-column-width {}
+}
+
+/-window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+binds {
+    Mod+Shift+Apostrophe { show-hotkey-overlay; }
+
+    Mod+Return hotkey-overlay-title="Open a Terminal: foot" { spawn "foot"; }
+    Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun -hint-welcome ''"; }
+    Mod+Ctrl+Q hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+    Mod+Shift+V { spawn-sh "cliphist list | rofi -dmenu | cliphist decode | wl-copy"; }
+    Mod+P { spawn "hyprpicker"; }
+
+    // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +5%"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ -5%"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle"; }
+
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+
+    Mod+O repeat=false { toggle-overview; }
+    Mod+Q repeat=false { close-window; }
+
+    Mod+H     { focus-column-left; }
+    Mod+L     { focus-column-right; }
+    Mod+J     { focus-window-or-workspace-down; }
+    Mod+K     { focus-window-or-workspace-up; }
+
+    Mod+Shift+H     { move-column-left; }
+    Mod+Shift+K     { move-column-to-workspace-up; }
+    Mod+Shift+J     { move-column-to-workspace-down; }
+    Mod+Shift+L     { move-column-right; }
+
+    Mod+Ctrl+K   { move-workspace-up; }
+    Mod+Ctrl+J   { move-workspace-down; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+
+    Mod+Tab { focus-workspace-previous; }
+
+    // // The following binds move the focused window in and out of a column.
+    // // If the window is alone, they will consume it into the nearby column to the side.
+    // // If the window is already in a column, they will expel it out.
+    // Mod+BracketLeft  { consume-or-expel-window-left; }
+    // Mod+BracketRight { consume-or-expel-window-right; }
+
+    // // Consume one window from the right to the bottom of the focused column.
+    // Mod+Comma  { consume-window-into-column; }
+    // // Expel the bottom window from the focused column to the right.
+    // Mod+Period { expel-window-from-column; }
+
+    // Cycle through widths set in preset-column-widths.
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-column-width-back; }
+
+    // Mod+Ctrl+Shift+R { switch-preset-window-height; }
+    // Mod+Ctrl+R { reset-window-height; }
+
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+
+    // // While maximize-column leaves gaps and borders around the window,
+    // // maximize-window-to-edges doesn't: the window expands to the edges of the screen.
+    // // This bind corresponds to normal window maximizing,
+    // // e.g. by double-clicking on the titlebar.
+    // Mod+M { maximize-window-to-edges; }
+
+    // Expand the focused column to space not taken up by other fully visible columns.
+    // Makes the column "fill the rest of the space".
+    // Mod+Ctrl+F { expand-column-to-available-width; }
+    Mod+C { center-column; }
+    // Center all fully visible columns on screen.
+    // Mod+Ctrl+C { center-visible-columns; }
+
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Plus { set-column-width "+10%"; }
+
+    // // Finer height adjustments when in column with other windows.
+    // Mod+Shift+Minus { set-window-height "-10%"; }
+    // Mod+Shift+Equal { set-window-height "+10%"; }
+
+    // Move the focused window between the floating and the tiling layout.
+    Mod+Shift+Space { toggle-window-floating; }
+    Mod+Space { switch-focus-between-floating-and-tiling; }
+
+    // Toggle tabbed column display mode.
+    // Windows in this column will appear as vertical tabs,
+    // rather than stacked on top of each other.
+    Mod+W { toggle-column-tabbed-display; }
+
+    // Actions to switch layouts.
+    // Note: if you uncomment these, make sure you do NOT have
+    // a matching layout switch hotkey configured in xkb options above.
+    // Having both at once on the same hotkey will break the switching,
+    // since it will switch twice upon pressing the hotkey (once by xkb, once by niri).
+    // Mod+Space       { switch-layout "next"; }
+    // Mod+Shift+Space { switch-layout "prev"; }
+
+    Mod+Shift+S { screenshot; }
+
+    Mod+Shift+E { quit; }
+    // Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+    // Powers off the monitors. To turn them back on, do any input like
+    // moving the mouse or pressing any other key.
+    Mod+Shift+P { power-off-monitors; }
+}
+
+cursor {
+    xcursor-theme "Bibata-Original-Classic"
+    xcursor-size 24
+
+    hide-when-typing
+    hide-after-inactive-ms 30000
+}
+
+// Named workspaces
+// workspace "music" {
+// ...
+//}

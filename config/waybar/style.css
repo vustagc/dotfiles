@@ -1,6 +1,6 @@
 * {
     font-family: IoskeleyMono, sans-serif;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 window#waybar {
@@ -9,7 +9,7 @@ window#waybar {
 }
 
 #workspaces button {
-    padding: 0 5px;
+     padding: 0;
      color: gray;
 }
 

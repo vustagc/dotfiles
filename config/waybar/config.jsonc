@@ -1,11 +1,11 @@
 {
     "output": "DP-1",
     "layer": "top",
-    "modules-left": ["hyprland/workspaces", "hyprland/workspaces#special", "hyprland/submap"],
-    "modules-center": ["hyprland/workspaces#middle"],
+    "modules-left": ["niri/workspaces"],
+    "modules-center": ["niri/window"],
     "modules-right": ["group/group-tray", "network", "pulseaudio", "clock"],
 
-    "hyprland/window": {
+    "niri/window": {
         "icon": true,
         "icon-size": 15,
         "icon-color": "white",
@@ -19,21 +19,9 @@
         "max-length": 100
     },
 
-    "hyprland/workspaces#special": {
-        "ignore-workspaces": ["[0-9]", "10"],
-        "show-special": true,
-        "special-visible-only": true
-    },
-
-    "hyprland/workspaces#middle": {
-            "format": "{windows}",
-            "workspace-taskbar": {
-                    "enable": true,
-                    "update-active-window": true,
-                    "format": "{icon}",
-                    "icon-size": 16
-            },
-            "active-only": true
+    "niri/window": {
+            "icon": true,
+            "icon-size": 12
     },
 
     "pulseaudio": {
