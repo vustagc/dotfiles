@@ -200,6 +200,7 @@ vim.lsp.enable({
         "lua_ls",
         "zigscient",
         "clangd",
+        "hls",
 })
 
 -- plugins

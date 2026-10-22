@@ -1,27 +1,23 @@
 {
     "output": "DP-1",
     "layer": "top",
-    "modules-left": ["niri/workspaces"],
-    "modules-center": ["niri/window"],
+    "modules-left": ["niri/workspaces", "niri/window"],
+    "modules-center": ["cffi/niri-windows"],
     "modules-right": ["group/group-tray", "network", "pulseaudio", "clock"],
 
-    "niri/window": {
-        "icon": true,
-        "icon-size": 15,
-        "icon-color": "white",
-        "rewrite": {
-            "(.*) - ghostty": "$1",
-            "(.*) - FreeTube": "$1",
-            "(.*) — LibreWolf": "$1",
-            "• Discord | (.*)": "$1",
-            "(.*) - YouTube — LibreWolf": "   $1"
-        },
-        "max-length": 100
+    "cffi/niri-windows": {
+            "module_path": "/home/guts/.config/waybar/libs/waybar-niri-windows.so",
+            "options": {
+                    "mode": "text"
+            }
     },
 
     "niri/window": {
-            "icon": true,
-            "icon-size": 12
+        "format": "",
+        "icon": true,
+        "icon-size": 12,
+        "icon-color": "white",
+        "max-length": 1
     },
 
     "pulseaudio": {

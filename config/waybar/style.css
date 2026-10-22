@@ -3,6 +3,10 @@
     font-size: 11px;
 }
 
+.cffi-niri-windows label {
+        font-size: 16px;
+}
+
 window#waybar {
     background-color: black;
     color: white;
