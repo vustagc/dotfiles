@@ -1,6 +1,7 @@
 alias ODIN_ROOT="~/Builds/odin"
 export PATH="$ODIN_ROOT:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
+export WINEPREFIX="$HOME/Media/wine"
 ZSH_THEME="evan"
 #PROMPT='%F{cyan}%~%f %F{gray}>%f '
 
