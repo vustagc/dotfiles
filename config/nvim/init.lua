@@ -15,7 +15,7 @@ vim.opt.fsync = false
 -- options
 --opt.netrw = false
 vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
---vim.opt.statuscolumn = ""
+-- vim.opt.statuscolumn = ""
 opt.encoding = "utf-8"
 opt.background = "dark"
 opt.termguicolors = true
@@ -47,28 +47,6 @@ opt.undofile = true
 -- vim.opt.shadafile = "NONE"
 --opt.guicursor = "n-v-c:block,i-ci:ver25,r-cr:hor20,t:ver25"
 
--- zen mode
-local zen = false
-
-local function toggle_zen()
-    zen = not zen
-
-    if zen then
-        vim.opt.statuscolumn = ""
-        vim.opt.number = false
-        vim.opt.relativenumber = false
-        vim.opt.laststatus = 0
-    else
-        vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
-        vim.opt.number = true
-        vim.opt.relativenumber = true
-        vim.opt.laststatus = 2
-    end
-end
-
-vim.api.nvim_create_user_command("Zen", toggle_zen, {})
-vim.cmd("cabbrev zen Zen")
-
 -- variables
 vim.diagnostic.config({
     virtual_text = false,
@@ -77,60 +55,52 @@ vim.diagnostic.config({
     update_in_insert = false,
 })
 
+vim.cmd("colorscheme my-theme")
+
 -- keybinds
 vim.cmd("tnoremap <C-q> <C-\\><C-n>")
-map("n", "<C-f>", function()
+map("n", "<C-s>", function()
     vim.lsp.buf.format({ async = false })
     vim.cmd('wa')
 end, { silent = true })
 
-map("n", "<C-s>", ":noa wa<CR>", { silent = true })
-map("n", "<C-b>", ":Odin <CR>", { silent = true })
-map("n", "<C-n>", ":!odin run . <CR>", { silent = true })
-map("n", "<C-s-b>", ":make run<CR>", { silent = true })
+-- clipboard
 map("v", "<C-y>", '"+y', { silent = true })
 map("n", "<C-p>", '"+p', { silent = true })
-map("v", "<C-p>", '"_dP', { silent = true })
+-- window nav
 map("n", "<C-h>", "<C-w>h")
 map("n", "<C-j>", "<C-w>j")
 map("n", "<C-k>", "<C-w>k")
 map("n", "<C-l>", "<C-w>l")
--- Use <C-w> {s,v} to {split,vsplit}
-map("n", "<leader>swap", "<C-w><C-x>")
-map("n", "-", ":bprevious<CR>")
-map("n", "+", ":bnext<CR>")
-map("n", "H", ":tabprev<CR>")
-map("n", "L", ":tabnext<CR>")
-map("n", "<A-n>", ":cnext<CR>")
-map("n", "<A-p>", ":cprev<CR>")
-map("n", "gz", ":!zeal \"<cword>\"&<CR><CR>")
--- Commands
+-- buffer nav
+map("n", "<leader>bh", ":bprevious<CR>")
+map("n", "<leader>bl", ":bnext<CR>")
+-- tab nav
+map("n", "<leader>tT", ":-tabnew<CR>")
+map("n", "<leader>tt", ":tabnew<CR>")
+map("n", "<leader>th", ":tabprev<CR>")
+map("n", "<leader>tl", ":tabnext<CR>")
+map("n", "<leader>tq", ":tabclose<CR>")
+-- qf list
+map("n", "<leader>cl", ":cnext<CR>")
+map("n", "<leader>ch", ":cprev<CR>")
+map("n", "<leader>cc", ":belowright copen<CR>")
+map("n", "<leader>cq", ":cclose<CR>")
+-- notes
+map("n", "<leader>ot", ":0tabnew ~/Notes/Todos/todo.md <CR>")
+map("n", "<leader>on", ":tabnew ~/Notes/")
+-- scratch buffer
+map("n", "<leader>x", ":lua Snacks.scratch()<CR>")
+-- plugin keybinds
+map("n", "<leader>.", ":lua MiniFiles.open()<CR>")
+map("n", "<leader>ss", "<cmd>AerialToggle left<CR>") -- symbol search
+-- repl
+map("n", "<leader>rs", ":vs<CR>:vert res 70<CR>:IronReplHere<CR>") -- start
+map("n", "<leader>rr", ":IronSend :l %<CR>") -- reload
+map("n", "<leader>rl", ":lua require('iron.core').send_line()<CR><Esc>")
+map("v", "<leader>rl", ":lua require('iron.core').visual_send()<CR><Esc>")
 
--- Grep
-vim.cmd("cabbrev grep Grep")
-vim.o.grepprg = "rg --vimgrep --hidden -g '!.git/*'"
-vim.api.nvim_create_user_command('Grep', function(opts)
-    local pattern = vim.trim(opts.args)
-
-    if pattern == '' then
-        return
-    end
-
-    local grep_cmd = vim.o.grepprg .. ' ' .. vim.fn.shellescape(pattern)
-    local grep_output = vim.fn.systemlist(grep_cmd)
-
-    if #grep_output == 0 then
-        print('No matches found for: ' .. pattern)
-        return
-    end
-
-    -- Set and open quickfix list
-    vim.fn.setqflist({}, ' ', {
-        title = 'Grep results for: ' .. pattern,
-        lines = grep_output
-    })
-    vim.cmd('belowright copen')
-end, { nargs = 1 })
+map("n", "<leader>rp", ":lua require('iron.core').repl_here(python)<CR><Esc>") -- floating python repl
 
 local user_cmd = vim.api.nvim_create_user_command
 user_cmd("Odin", function() require("user.odin").build(opts) end, {})
@@ -139,16 +109,8 @@ user_cmd("Mtmp", function() require("user.commands").mktemp() end, {})
 -- :read !ls        # paste ouput from command
 -- <range>write !wc # write output to command
 
+-- Auto commands
 local auto_cmd = vim.api.nvim_create_autocmd
--- auto_cmd("VimLeavePre", {
---     callback = function()
---         local cwd = vim.fn.getcwd()
---         if vim.fn.isdirectory(cwd .. "/.git") == 1 then
---             vim.cmd("mks! .sess.vim")
---         end
---     end,
--- })
-
 auto_cmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
@@ -174,6 +136,16 @@ auto_cmd("CursorMoved", {
     end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'odin',
+    callback = function()
+        map("n", "<leader>mb", ":Odin<CR>")         -- build
+        map("n", "<leader>mt", ":!odin test .<CR>") -- test
+        map("n", "<leader>mr", ":!odin run .<CR>")  -- run
+    end,
+})
+
+
 vim.lsp.config('*', {
     root_markers = { '.git' },
 })
@@ -185,50 +157,98 @@ vim.lsp.enable({
     "zigscient",
     "clangd",
     "hls",
-    "org"
+    "marskman",
 })
 
 -- plugins
 vim.pack.add({
-    "https://github.com/stevearc/oil.nvim",
-    "https://github.com/stevearc/aerial.nvim",
-    "https://github.com/kylechui/nvim-surround",
-    "https://github.com/christoomey/vim-tmux-navigator",
-    "https://github.com/nvim-tree/nvim-web-devicons",
     "https://github.com/nvim-treesitter/nvim-treesitter",
-    "https://github.com/nvim-orgmode/orgmode",
-    "https://github.com/chipsenkbeil/org-roam.nvim"
+    "https://github.com/stevearc/aerial.nvim",
+    "https://github.com/christoomey/vim-tmux-navigator",
+    "https://github.com/jakewvincent/mkdnflow.nvim",
+    "https://github.com/Vigemus/iron.nvim",
+
+    --
+    "https://github.com/nvim-tree/nvim-web-devicons",
+    "https://github.com/nvim-mini/mini.files",
+    "https://github.com/nvim-mini/mini-git",
+    "https://github.com/nvim-mini/mini.pairs",
+    "https://github.com/nvim-mini/mini.sessions",
+    "https://github.com/nvim-mini/mini.surround",
+
+    --
+    "https://github.com/folke/zen-mode.nvim",
+    "https://github.com/folke/snacks.nvim",
+})
+-- require('mini.icons').setup()
+require('mini.surround').setup() -- `sa` in normal and visual modes to 'surround add', `sr` to replace
+require('mini.files').setup()
+require('mini.git').setup()
+require('mini.pairs').setup()
+require('mini.sessions').setup({
+    autoread = true,
+    autowrite = true,
+    directory = "~/.sessions",
 })
 
-require('orgmode').setup({
-    org_agenda_files = '~/Notes/orgs/**/*',
-    org_default_notes_file = '~/Notes/orgs/refile.org',
-})
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'org',
-  callback = function()
-    vim.keymap.set('i', '<S-CR>', '<cmd>lua require("orgmode").action("org_mappings.meta_return")<CR>', {
-      silent = true,
-      buffer = true,
-    })
-  end,
+require("snacks").setup({ scratch = {
+    enabled = true,
+    ft = "lua"
+
+} })
+
+require("iron.core").setup({
+    scratch_repl = true,
+    repl_definition = {
+        sh = {
+            command = { "zsh" }
+        },
+        python = {
+            command = { "python3" },
+            format = require("iron.fts.common").bracketed_paste_python,
+            block_dividers = { "# %%", "#%%" },
+            env = { PYTHON_BASIC_REPL = "1" } --this is needed for python3.13 and up.
+        },
+        haskell = {
+            command = function(meta)
+                local filename = vim.api.nvim_buf_get_name(meta.current_bufnr)
+                return { 'cabal', 'v2-repl', filename }
+            end
+        }
+    },
+    -- repl_open_cmd = require("iron.view").center("30%", 20) -- this shit does not wrk bruh
 })
 
-require("org-roam").setup({
-    directory = "~/Notes/orgs",
-    -- -- optional
-    -- org_files = {
-    --     "~/another_org_dir",
-    --     "~/some/folder/*.org",
-    --     "~/a/single/org_file.org",
-    -- }
+require("mkdnflow").setup({
+    mappings = {
+        MkdnNextLink = false,
+        MkdnPrevLink = false,
+        MkdnNextHeading = { 'n', ']]' },
+        MkdnPrevHeading = { 'n', '[[' },
+        MkdnFoldSection = { 'n', '<Tab>' },
+        MkdnUnfoldSection = { 'n', '<S-Tab>' }, -- or just `l`
+        MkdnToggleToDo = { { 'n', 'v' }, '<C-Space>' },
+        MkdnEnter = { { 'n', 'v' }, '<CR>' },
+        MkdnGoBack = { 'n', '<BS>' },
+        MkdnTableNewRowBelow = { 'n', '<leader>ir' },
+        MkdnTableNewRowAbove = { 'n', '<leader>iR' },
+        MkdnTableNewColAfter = { 'n', '<leader>ic' },
+        MkdnTableNewColBefore = { 'n', '<leader>iC' },
+        MkdnTableNextCell = { 'i', '<Tab>' },
+        MkdnTablePrevCell = { 'i', '<S-Tab>' },
+    }
 })
 
-local aerial = require("aerial")
-aerial.setup({
+require("zen-mode").setup({
+    plugins = {
+        tmux = { enabled = true }, -- disables the tmux statusline
+    }
+})
+
+require("aerial").setup({
     on_attach = function(bufnr)
-        vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-        vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
+        -- vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+        -- vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
     end,
 
     keymaps = {
@@ -239,11 +259,12 @@ aerial.setup({
         ["<C-v>"] = "actions.jump_vsplit",
         ["<C-s>"] = "actions.jump_split",
         ["p"] = "actions.scroll",
-        ["<C-j>"] = "actions.down_and_scroll",
-        ["<C-k>"] = "actions.up_and_scroll",
         ["q"] = "actions.close",
     },
 
+    icons = {},
+
+    close_on_select = true,
     ignore = {
         unlisted_buffers = true,
         diff_windows = true,
@@ -254,44 +275,12 @@ aerial.setup({
         width = 30,
         win_opts = {},
         default_direction = "prefer_left",
-        placement = "edge",
+        placement = "window",
         resize_to_content = false,
     },
 
     attach_mode = "global",
-    -- open_automatic = function(bufnr)
-    --     return not aerial.was_closed()
-    -- end,
-    --
-    -- open_automatic = false,
 })
-vim.keymap.set("n", "<C-t>", "<cmd>AerialToggle! left<CR>")
-vim.keymap.set("n", "<leader>an", "<cmd>AerialNavToggle <CR>")
-
-require("oil").setup({
-    default_file_explorer = true,
-    use_default_keymaps = false,
-    view_options = {
-        show_hidden = false,
-    },
-    keymaps = {
-        ["g?"] = { "actions.show_help", mode = "n" },
-        ["<C-e>"] = { "actions.close", mode = "n" },                 -- toggle
-        ["<CR>"] = { "actions.select", opts = { vertical = true } }, -- open in new window
-        ["<Tab>"] = { "actions.preview", mode = "n" },               -- preview
-        ["R"] = { "actions.refresh", mode = "n" },
-        ["."] = "actions.select",                                    -- go into
-        ["-"] = { "actions.parent", mode = "n" },                    -- go out of
-        ["_"] = { "actions.open_cwd", mode = "n" },
-        ["`"] = { "actions.cd", mode = "n" },
-        ["g~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
-        ["gs"] = { "actions.change_sort", mode = "n" },
-        ["gx"] = "actions.open_external",
-        ["g."] = { "actions.toggle_hidden", mode = "n" },
-        ["g\\"] = { "actions.toggle_trash", mode = "n" },
-    },
-})
-vim.keymap.set("n", "<C-e>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- native fuzzy finder with :find
 -- https://cherryramatis.xyz/posts/native-fuzzy-finder-in-neovim-with-lua-and-cool-bindings/
@@ -329,4 +318,28 @@ auto_cmd({ 'CmdlineChanged', 'CmdlineLeave' }, {
     end
 })
 
-vim.cmd("colorscheme my-theme")
+-- Grep
+vim.cmd("cabbrev grep Grep")
+vim.o.grepprg = "rg --vimgrep --hidden -g '!.git/*'"
+vim.api.nvim_create_user_command('Grep', function(opts)
+    local pattern = vim.trim(opts.args)
+
+    if pattern == '' then
+        return
+    end
+
+    local grep_cmd = vim.o.grepprg .. ' ' .. vim.fn.shellescape(pattern)
+    local grep_output = vim.fn.systemlist(grep_cmd)
+
+    if #grep_output == 0 then
+        print('No matches found for: ' .. pattern)
+        return
+    end
+
+    -- Set and open quickfix list
+    vim.fn.setqflist({}, ' ', {
+        title = 'Grep results for: ' .. pattern,
+        lines = grep_output
+    })
+    vim.cmd('belowright copen')
+end, { nargs = 1 })

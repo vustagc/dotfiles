@@ -32,7 +32,6 @@ M.mktemp = function()
         vim.cmd.buffer(tmp)
         vim.bo[tmp].buftype = "nofile"
         vim.api.nvim_buf_set_name(tmp, "M:" .. os.time())
-
         return tmp
 end
 
@@ -58,7 +57,7 @@ M.viewOutput = function(opts)
 end
 
 -- github.com/justamanpop/strike-through.nvim
-function M.toggleStrikeThrough()
+M.toggleStrikeThrough = function()
         local curr_line = vim.api.nvim_get_current_line()
         local strike_through_char = "\xCC\xB6"
         local is_struck_through = string.find(curr_line, strike_through_char) ~= nil
@@ -85,5 +84,6 @@ function M.makeNote(opts)
                 vim.api.nvim_buf_set_lines(0, 0, 1, false, { "# " .. filename:gsub("%.md$", ""), "" })
         end
 end
+
 
 return M
