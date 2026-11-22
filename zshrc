@@ -1,5 +1,6 @@
 alias ODIN_ROOT="~/Builds/odin"
 export PATH="$ODIN_ROOT:$PATH"
+export PATH="/usr/bin/python:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
 export WINEPREFIX="$HOME/Media/wine"
 ZSH_THEME="evan"
@@ -30,6 +31,7 @@ else
   export EDITOR='nvim'
 fi
 
+alias cat=bat
 alias day="ps aux | grep foot | awk '{print $2}' | head -n 1 | xargs kill -s SIGUSR2 &> /dev/null"
 alias night="ps aux | grep foot | awk '{print $2}' | head -n 1 | xargs kill -s SIGUSR1 &> /dev/null"
 
@@ -73,9 +75,14 @@ function touchsh () {
 export ANDROID_HOME="$HOME/Builds/android-sdk"
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 
+export DOOM_ROOT="$HOME/.config/emacs/bin"
+export PATH="$DOOM_ROOT:$PATH"
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 source $ZSH/oh-my-zsh.sh
 
 bindkey '^P' history-substring-search-up
 bindkey '^N' history-substring-search-down
+
+[ -f "/home/guts/.ghcup/env" ] && . "/home/guts/.ghcup/env" # ghcup-env

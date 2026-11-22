@@ -8,7 +8,7 @@ M.accents = {
         pink = "#E57AA4",
         lavender = "#C9A0FF",
         violet = "#A998F0",
-        blue = "#5B82C7",
+        blue = "#87afd7",
         cyan = "#64B8B4",
         mint = "#7CE0C2",
         green = "#5FB36A",
@@ -20,7 +20,7 @@ M.accents = {
 
 --- @class Colors
 M.colors = {
-        accent = M.accents.yellow,
+        accent = M.accents.blue,
         white = "#E6E6E6",
         light_gray = "#A6A6A6",
         gray = "#737373",

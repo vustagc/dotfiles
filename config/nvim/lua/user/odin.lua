@@ -60,7 +60,7 @@ function M.build()
                         })
 
                         if result.code ~= 0 and #items > 0 then
-                                vim.cmd('copen')
+                                vim.cmd('belowright copen')
                                 vim.notify("Build errors", vim.log.levels.ERROR, { title = "odin build" })
                         else
                                 vim.cmd('cclose')

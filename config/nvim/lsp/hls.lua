@@ -1,5 +1,5 @@
 return {
-        cmd = { 'haskell-language-server-wrapper', '--lsp' },
+        cmd = { 'haskell-language-server-9.10.3', '--lsp' },
         filetypes = { 'haskell', 'lhaskell', 'cabal' },
         settings = {
                 haskell = {

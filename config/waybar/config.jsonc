@@ -1,5 +1,5 @@
 {
-    "output": "DP-1",
+    "output": ["DP-1", "HDMI-A-1"],
     "layer": "top",
     "modules-left": ["niri/workspaces", "niri/window"],
     "modules-center": ["cffi/niri-windows"],

@@ -7,6 +7,8 @@
 // Find the full list of options on the wiki:
 // https://niri-wm.github.io/niri/Configuration:-Input
 input {
+    mod-key "Alt"
+
     keyboard {
         xkb {
             layout "pt"
@@ -30,8 +32,16 @@ input {
 }
 
 output "DP-1" {
-    mode "1920x1080@74"
-    // hot-corners {}
+    mode "1920x1080@60" // 74
+    hot-corners {
+        top-left 
+        top-right
+    }
+}
+
+output "HDMI-A-1" {
+    mode "1920x1080@60" // 144
+    //     position x=1280 y=0
 }
 
 // output "HDMI-1" {
@@ -86,12 +96,12 @@ animations {
     slowdown 0.5
 }
 
-/-window-rule {
-    // This regular expression is intentionally made as specific as possible,
-    // since this is the default config, and we want no false positives.
-    // You can get away with just app-id="wezterm" if you want.
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    default-column-width {}
+window-rule {
+    match app-id="Ardour"
+    match app-id="steam"
+    match app-id="audacity"
+    match app-id="librewolf"
+    default-column-width { proportion 1.0; }
 }
 
 /-window-rule {
@@ -103,6 +113,7 @@ binds {
     Mod+Shift+Apostrophe { show-hotkey-overlay; }
 
     Mod+Return hotkey-overlay-title="Open a Terminal: foot" { spawn "foot"; }
+    Mod+E { spawn-sh "~/.config/emacs/bin/doom emacs"; }
     Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun -hint-welcome ''"; }
     Mod+Ctrl+Q hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
     Mod+Shift+V { spawn-sh "cliphist list | rofi -dmenu | cliphist decode | wl-copy"; }
@@ -153,6 +164,11 @@ binds {
     Mod+Shift+7 { move-column-to-workspace 7; }
     Mod+Shift+8 { move-column-to-workspace 8; }
     Mod+Shift+9 { move-column-to-workspace 9; }
+
+    Mod+F1 { focus-monitor "DP-1"; }
+    Mod+Shift+F1 { move-column-to-monitor "DP-1"; }
+    Mod+F2 { focus-monitor "HDMI-A-1"; }
+    Mod+Shift+F2 { move-column-to-monitor "HDMI-A-1"; }
 
     Mod+Tab { focus-workspace-previous; }
 
@@ -233,6 +249,14 @@ cursor {
 }
 
 // Named workspaces
-// workspace "music" {
-// ...
-//}
+// workspace "calc" {
+// }
+// Mod+C { focus-workspace "calc"; }
+
+
+// Window rules
+
+window-rule {
+    match app-id="akai professional lpd8 mk2 program editor.exe"
+    open-floating true
+}
